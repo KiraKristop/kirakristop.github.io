@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📬 Написать нам — kirakris.help@list.ru</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #f0f4ff 0%, #e2e8f0 100%);
+      padding: 20px;
+    }
+
+    .card {
+      max-width: 580px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 32px;
+      padding: 40px 36px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Заголовок */
+    .header {
+      margin-bottom: 8px;
+    }
+
+    .header h1 {
+      font-size: 30px;
+      font-weight: 700;
+      color: #0b1a2e;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header h1 span {
+      background: #eef2ff;
+      padding: 6px 12px;
+      border-radius: 40px;
+      font-size: 20px;
+    }
+
+    .subhead {
+      font-size: 15px;
+      color: #475569;
+      margin-bottom: 32px;
+      padding: 12px 18px;
+      background: #f8fafc;
+      border-radius: 16px;
+      border: 1px solid #e9edf4;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .subhead strong {
+      color: #0b1a2e;
+      font-weight: 600;
+      background: #e9edf4;
+      padding: 2px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    /* Поля формы */
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 15px;
+      color: #0b1a2e;
+      margin-bottom: 6px;
+      letter-spacing: -0.2px;
+    }
+
+    .form-group label .required {
+      color: #dc2626;
+      margin-left: 2px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper .icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .input-wrapper textarea ~ .icon {
+      top: 20px;
+      transform: none;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 14px 18px 14px 48px;
+      font-size: 15px;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      background: #fafbfc;
+      transition: all 0.25s;
+      color: #0b1a2e;
+      outline: none;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #3b82f6;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+      padding-top: 16px;
+      line-height: 1.6;
+    }
+
+    /* Подсказки */
+    .hint {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 6px;
+      padding-left: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hint.warning {
+      color: #b45309;
+      background: #fffbeb;
+      padding: 6px 12px;
+      border-radius: 30px;
+      border: 1px solid #fcd34d;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .hint.warning svg {
+      flex-shrink: 0;
+    }
+
+    /* Кнопка */
+    .btn {
+      width: 100%;
+      background: #0b1a2e;
+      color: white;
+      border: none;
+      padding: 18px 20px;
+      font-size: 17px;
+      font-weight: 600;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 8px 24px rgba(11, 26, 46, 0.15);
+      letter-spacing: 0.3px;
+    }
+
+    .btn:hover {
+      background: #1a2f4a;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(11, 26, 46, 0.2);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    /* Статус */
+    .status-message {
+      margin-top: 20px;
+      padding: 14px 18px;
+      border-radius: 30px;
+      font-weight: 500;
+      font-size: 15px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-message.info {
+      display: flex;
+      background: #eef2ff;
+      border: 1px solid #818cf8;
+      color: #3730a3;
+    }
+
+    .status-message svg {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+
+    /* ===== БЛОКИ ССЫЛОК ===== */
+    .links-section {
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .link-block {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      transition: all 0.25s;
+      text-decoration: none;
+      color: #0b1a2e;
+    }
+
+    .link-block:hover {
+      border-color: #3b82f6;
+      background: #f0f4ff;
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+    }
+
+    .link-block .link-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .link-block .link-icon.telegram {
+      background: #e8f0fe;
+      color: #0088cc;
+    }
+
+    .link-block .link-icon.website {
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+
+    .link-block .link-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .link-block .link-label {
+      font-weight: 600;
+      font-size: 15px;
+      color: #0b1a2e;
+    }
+
+    .link-block .link-url {
+      font-size: 13px;
+      color: #64748b;
+      word-break: break-all;
+    }
+
+    .link-block .link-arrow {
+      font-size: 18px;
+      color: #94a3b8;
+      transition: 0.2s;
+      flex-shrink: 0;
+    }
+
+    .link-block:hover .link-arrow {
+      color: #3b82f6;
+      transform: translateX(4px);
+    }
+
+    /* Подвал */
+    .footer-note {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 14px;
+      color: #64748b;
+      border-top: 1px solid #e9edf4;
+      padding-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footer-note .badge {
+      background: #f1f5f9;
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-size: 13px;
+      color: #0b1a2e;
+      font-weight: 500;
+    }
+
+    .footer-note .badge.green {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    /* Адаптив */
+    @media (max-width: 480px) {
+      .card { padding: 28px 18px; }
+      .header h1 { font-size: 24px; }
+      input, textarea { padding-left: 42px; font-size: 14px; }
+      .link-block { padding: 14px 16px; }
+      .link-block .link-icon { width: 38px; height: 38px; font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <!-- Заголовок -->
+  <div class="header">
+    <h1>
+      <span>✉️</span> Написать нам
+    </h1>
+  </div>
+
+  <div class="subhead">
+    📬 Отправьте сообщение на <strong>kirakris.help@list.ru</strong>
+  </div>
+
+  <!-- Форма -->
+  <form id="contactForm">
+    <!-- Имя -->
+    <div class="form-group">
+      <label for="name">Ваше имя <span class="required">*</span></label>
+      <div class="input-wrapper">
+        <span class="icon">👤</span>
+        <input type="text" id="name" name="name" placeholder="Имя (Иван)" value="Имя (Иван)" required />
+      </div>
+      <div class="hint">📌 Например: Иван</div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Ваш Email <span class="required">*</span></label>
+      <div class="input-wrapper">
+        <span class="icon">📧</span>
+        <input type="email" id="email" name="email" placeholder="почта (ivan@bk.ru)" value="почта (ivan@bk.ru)" required />
+      </div>
+      <div class="hint warning">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        На этот адрес мы отправим ответ
+      </div>
+    </div>
+
+    <!-- Тема -->
+    <div class="form-group">
+      <label for="subject">Тема письма <span class="required">*</span></label>
+      <div class="input-wrapper">
+        <span class="icon">📌</span>
+        <input type="text" id="subject" name="subject" placeholder="тема (Благодарение)" value="тема (Благодарение)" required />
+      </div>
+      <div class="hint">📌 Например: Благодарность, Вопрос, Предложение</div>
+    </div>
+
+    <!-- Сообщение -->
+    <div class="form-group">
+      <label for="message">Сообщение <span class="required">*</span></label>
+      <div class="input-wrapper">
+        <span class="icon">💬</span>
+        <textarea id="message" name="message" placeholder="Вопрос или просьба (Привет ты крутой спасибо за всё)" required>Вопрос или просьба (Привет ты крутой спасибо за всё)</textarea>
+      </div>
+      <div class="hint">📌 Опишите ваш вопрос или сообщение</div>
+    </div>
+
+    <!-- Кнопка -->
+    <button type="submit" class="btn" id="submitBtn">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      Отправить письмо
+    </button>
+  </form>
+
+  <!-- Статус -->
+  <div id="statusMessage" class="status-message">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v4z"/></svg>
+    <span id="statusText">Информация</span>
+  </div>
+
+  <!-- ===== БЛОКИ ССЫЛОК ===== -->
+  <div class="links-section">
+    <!-- Телеграм -->
+    <a href="https://t.me/KiraKris02" target="_blank" class="link-block" rel="noopener noreferrer">
+      <div class="link-icon telegram">📱</div>
+      <div class="link-content">
+        <span class="link-label">Telegram</span>
+        <span class="link-url">@KiraKris02</span>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <!-- Основной сайт -->
+    <a href="https://kirakristop.github.io/" target="_blank" class="link-block" rel="noopener noreferrer">
+      <div class="link-icon website">🌐</div>
+      <div class="link-content">
+        <span class="link-label">Основной сайт</span>
+        <span class="link-url">kirakristop.github.io</span>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- Подвал -->
+  <div class="footer-note">
+    <span class="badge">📨 kirakris.help@list.ru</span>
+    <span style="color: #94a3b8;">•</span>
+    <span class="badge green">💬 отвечаем в течение дня</span>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const form = document.getElementById('contactForm');
+    const statusDiv = document.getElementById('statusMessage');
+    const statusText = document.getElementById('statusText');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function showStatus(message, type = 'info') {
+      statusDiv.className = 'status-message';
+      statusDiv.classList.add(type);
+      statusText.textContent = message;
+      statusDiv.style.display = 'flex';
+    }
+
+    function hideStatus() {
+      statusDiv.style.display = 'none';
+      statusDiv.className = 'status-message';
+    }
+
+    form.querySelectorAll('input, textarea').forEach(field => {
+      field.addEventListener('focus', hideStatus);
+    });
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const subject = document.getElementById('subject').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      if (!name || !email || !subject || !message) {
+        showStatus('❌ Заполните все поля!', 'info');
+        return;
+      }
+
+      const encode = (str) => encodeURIComponent(str);
+      const body = `Имя: ${name}\nEmail: ${email}\n\nСообщение:\n${message}`;
+      const mailtoLink = `mailto:kirakris.help@list.ru?subject=${encode(subject)}&body=${encode(body)}`;
+
+      showStatus('📨 Открывается почтовый клиент...', 'info');
+
+      setTimeout(() => {
+        window.location.href = mailtoLink;
+        setTimeout(hideStatus, 3000);
+      }, 400);
+    });
+
+  })();
+</script>
+
+</body>
+</html>
