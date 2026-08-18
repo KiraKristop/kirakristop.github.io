@@ -1,1 +1,739 @@
-htlo
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KiraKris ✨ Официальный сайт</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* ----- CSS Variables ----- */
+        :root {
+            --bg-body: #121214;
+            --bg-card: #1a1a1e;
+            --bg-sidebar: #16161a;
+            --border-color: #2a2a30;
+            --text-primary: #ffffff;
+            --text-secondary: #a5a5a5;
+            --accent: #bb86fc;
+            --accent-hover: #9a6bdb;
+            --btn-bg: #252529;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --radius: 18px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f0edf5;
+            --bg-card: #ffffff;
+            --bg-sidebar: #e8e4ee;
+            --border-color: #d0cce0;
+            --text-primary: #1a1a1e;
+            --text-secondary: #4a4a5a;
+            --accent: #7c4dff;
+            --accent-hover: #5f3ab0;
+            --btn-bg: #e8e6f0;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+        }
+
+        /* ----- Reset & Base ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        /* ----- Sidebar (левое меню) ----- */
+        .sidebar {
+            width: 210px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            padding: 28px 16px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        .sidebar .brand {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar .brand i {
+            font-size: 1.8rem;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.98rem;
+            transition: all var(--transition);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+
+        .menu-item i {
+            width: 24px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .menu-item:hover {
+            background: var(--btn-bg);
+            color: var(--text-primary);
+        }
+
+        .menu-item.active {
+            background: var(--accent);
+            color: #121214;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(187, 134, 252, 0.25);
+        }
+
+        .menu-item.active i {
+            color: #121214;
+        }
+
+        .menu-divider {
+            margin: 12px 0 8px;
+            border: none;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* ----- Основная область ----- */
+        .main {
+            flex: 1;
+            padding: 32px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .content-grid {
+            max-width: 780px;
+            width: 100%;
+        }
+
+        /* ----- Шапка профиля ----- */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #121214;
+            flex-shrink: 0;
+            box-shadow: 0 0 0 3px var(--bg-card), 0 0 0 6px var(--accent);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .avatar:hover {
+            transform: scale(1.04) rotate(-3deg);
+        }
+
+        .profile-info h1 {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 2px;
+        }
+        .profile-info .sub {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        .profile-info .bio {
+            color: var(--text-secondary);
+            margin-top: 6px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* ----- Блоки-карточки (окна) ----- */
+        .windows-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .window-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all var(--transition);
+        }
+
+        .window-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 22px;
+            cursor: pointer;
+            transition: background 0.2s;
+            user-select: none;
+        }
+        .window-header:hover {
+            background: var(--btn-bg);
+        }
+        .window-header .title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .window-header .title i {
+            color: var(--accent);
+            width: 24px;
+            text-align: center;
+        }
+        .window-header .toggle-icon {
+            color: var(--text-secondary);
+            transition: transform 0.3s;
+            font-size: 1.1rem;
+        }
+        .window-card.open .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .window-body {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 22px;
+            transition: max-height 0.45s ease, padding 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .window-card.open .window-body {
+            max-height: 400px;
+            padding: 8px 22px 22px;
+            opacity: 1;
+        }
+
+        .window-body .content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            padding-top: 4px;
+        }
+        .window-body .content a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .window-body .content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Стили для ссылок внутри окон */
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--btn-bg);
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .social-links a:hover {
+            background: var(--accent);
+            color: #121214;
+            transform: translateY(-2px);
+        }
+
+        /* ----- Счётчик лайков ----- */
+        .counter-block {
+            margin-top: 24px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+        .counter-block button {
+            background: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .counter-block button:hover {
+            background: var(--accent);
+            color: #121214;
+            transform: scale(1.04);
+        }
+        .counter-block .count {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.3rem;
+            min-width: 34px;
+            text-align: center;
+        }
+
+        /* ----- Кнопка смены темы (в правом верхнем углу) ----- */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: #121214;
+            transform: rotate(20deg) scale(1.05);
+        }
+
+        /* ----- Адаптивность ----- */
+        @media (max-width: 700px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                height: auto;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 14px 16px;
+                gap: 4px;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                background: var(--bg-sidebar);
+                backdrop-filter: blur(6px);
+            }
+            .sidebar .brand {
+                margin-bottom: 0;
+                width: 100%;
+                font-size: 1.3rem;
+            }
+            .menu-item {
+                padding: 8px 14px;
+                font-size: 0.85rem;
+                flex: 0 0 auto;
+                width: auto;
+            }
+            .menu-item i {
+                font-size: 1rem;
+            }
+            .menu-divider {
+                display: none;
+            }
+            .main {
+                padding: 20px 16px;
+            }
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .theme-toggle {
+                top: 12px;
+                right: 14px;
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            .window-header {
+                padding: 14px 16px;
+            }
+            .window-body {
+                padding: 0 16px;
+            }
+            .window-card.open .window-body {
+                padding: 6px 16px 18px;
+            }
+        }
+
+        /* Анимация появления */
+        .main {
+            animation: fadeUp 0.6s ease forwards;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== БОКОВОЕ МЕНЮ (СЛЕВА) ====== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <i class="fas fa-star"></i> KiraKris
+        </div>
+
+        <button class="menu-item active" data-target="about">
+            <i class="fas fa-user"></i> Обо мне
+        </button>
+        <button class="menu-item" data-target="social">
+            <i class="fas fa-share-alt"></i> Соцсети
+        </button>
+        <button class="menu-item" data-target="projects">
+            <i class="fas fa-code"></i> Проекты
+        </button>
+        <button class="menu-item" data-target="os">
+            <i class="fas fa-cd"></i> Образы OS
+        </button>
+
+        <hr class="menu-divider" />
+
+        <button class="menu-item" data-target="contact">
+            <i class="fas fa-envelope"></i> Контакты
+        </button>
+    </aside>
+
+    <!-- ====== ОСНОВНАЯ ОБЛАСТЬ ====== -->
+    <main class="main">
+        <div class="content-grid">
+
+            <!-- Шапка профиля -->
+            <div class="profile-header">
+                <div class="avatar" id="avatarEl">✨</div>
+                <div class="profile-info">
+                    <h1>KiraKris</h1>
+                    <div class="sub">💜 разработчик · геймер · мечтатель</div>
+                    <div class="bio">Привет! Я Кира — обожаю игры, веб-разработку и создавать уютные проекты.</div>
+                </div>
+            </div>
+
+            <!-- ====== БЛОКИ-ОКНА ====== -->
+            <div class="windows-grid">
+
+                <!-- Окно: Обо мне -->
+                <div class="window-card open" id="win-about">
+                    <div class="window-header" data-window="win-about">
+                        <span class="title"><i class="fas fa-user"></i> Обо мне</span>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="window-body">
+                        <div class="content">
+                            <p>Меня зовут Кира. Я увлекаюсь веб-разработкой, дизайном и играми. Люблю создавать красивые и функциональные вещи. В свободное время играю в инди-игры, смотрю аниме и слушаю музыку.</p>
+                            <p style="margin-top:10px;">✨ <strong>Навыки:</strong> HTML, CSS, JavaScript, Python, Figma, а также немножко UI/UX.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Окно: Соцсети -->
+                <div class="window-card" id="win-social">
+                    <div class="window-header" data-window="win-social">
+                        <span class="title"><i class="fas fa-share-alt"></i> Соцсети</span>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="window-body">
+                        <div class="content">
+                            <p>Подписывайся, чтобы быть в курсе моих проектов и новостей:</p>
+                            <div class="social-links">
+                                <a href="https://steamcommunity.com/id/KIRAKRISUWU/" target="_blank" id="steamLink"><i class="fab fa-steam"></i> Steam</a>
+                                <a href="https://github.com/KiraKristop" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                                <a href="https://www.youtube.com/@KiraKris02" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+                                <a href="https://t.me/KiraKris02" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
+                            </div>
+                            <p style="margin-top:12px; font-size:0.9rem; color:var(--text-secondary);">
+                                <i class="fas fa-info-circle"></i> Для Steam требуется подтверждение возраста 16+.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Окно: Проекты -->
+                <div class="window-card" id="win-projects">
+                    <div class="window-header" data-window="win-projects">
+                        <span class="title"><i class="fas fa-code"></i> Проекты</span>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="window-body">
+                        <div class="content">
+                            <ul style="list-style:none; padding-left:0;">
+                                <li style="margin-bottom:10px;">🔹 <strong>Этот сайт</strong> — персональная страница-визитка.</li>
+                                <li style="margin-bottom:10px;">🔹 <strong>osinfo</strong> — коллекция образов операционных систем.</li>
+                                <li style="margin-bottom:10px;">🔹 <strong>Telegram-бот</strong> — утилита для уведомлений (в разработке).</li>
+                            </ul>
+                            <p>Больше проектов можно найти на моём <a href="https://github.com/KiraKristop" target="_blank">GitHub</a>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Окно: Образы OS -->
+                <div class="window-card" id="win-os">
+                    <div class="window-header" data-window="win-os">
+                        <span class="title"><i class="fas fa-cd"></i> Образы OS</span>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="window-body">
+                        <div class="content">
+                            <p style="margin-top:12px;">
+                                <a href="https://km2911test.github.io/osinfo/" target="_blank" style="color:var(--accent);">
+                                    <i class="fas fa-external-link-alt"></i> Перейти на страницу с образами
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Окно: Контакты -->
+                <div class="window-card" id="win-contact">
+                    <div class="window-header" data-window="win-contact">
+                        <span class="title"><i class="fas fa-envelope"></i> Контакты</span>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="window-body">
+                        <div class="content">
+                            <p>Связаться со мной можно через:</p>
+                            <div class="social-links" style="margin-top:6px;">
+                                <a href="https://t.me/KiraKris02" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
+                                <a href="https://kirakristop.github.io/Mail/" target="_blank"><i class="fas fa-envelope"></i> Email</a>
+                            </div>
+                            <p style="margin-top:12px; font-size:0.9rem; color:var(--text-secondary);">
+                                <i class="fas fa-clock"></i> Отвечаю обычно в течение дня.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- /windows-grid -->
+
+            <!-- Счётчик лайков -->
+            <div class="counter-block">
+                <span>❤️</span>
+                <button id="decBtn">−</button>
+                <span class="count" id="countDisplay">0</span>
+                <button id="incBtn">+</button>
+                <span>лайков</span>
+            </div>
+
+        </div> <!-- /content-grid -->
+    </main>
+
+    <!-- Кнопка смены темы -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // --- 1. ТЕМА (светлая/тёмная) ---
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const root = document.documentElement;
+
+            let currentTheme = localStorage.getItem('kira-theme') || 'dark';
+            if (currentTheme === 'light') {
+                root.setAttribute('data-theme', 'light');
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                root.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-moon';
+            }
+
+            themeToggle.addEventListener('click', function() {
+                const isLight = root.getAttribute('data-theme') === 'light';
+                if (isLight) {
+                    root.setAttribute('data-theme', 'dark');
+                    themeIcon.className = 'fas fa-moon';
+                    localStorage.setItem('kira-theme', 'dark');
+                } else {
+                    root.setAttribute('data-theme', 'light');
+                    themeIcon.className = 'fas fa-sun';
+                    localStorage.setItem('kira-theme', 'light');
+                }
+            });
+
+            // --- 2. МЕНЮ (подсветка активного пункта) ---
+            const menuItems = document.querySelectorAll('.menu-item[data-target]');
+            const windows = {
+                about: document.getElementById('win-about'),
+                social: document.getElementById('win-social'),
+                projects: document.getElementById('win-projects'),
+                os: document.getElementById('win-os'),
+                contact: document.getElementById('win-contact')
+            };
+
+            // Функция скролла к окну
+            function scrollToWindow(winId) {
+                const win = windows[winId];
+                if (win) {
+                    win.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Убираем активный класс у всех
+                    menuItems.forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const target = this.dataset.target;
+                    if (target && windows[target]) {
+                        // Открываем окно, если оно закрыто
+                        const win = windows[target];
+                        if (!win.classList.contains('open')) {
+                            win.classList.add('open');
+                        }
+                        // Скроллим к нему
+                        scrollToWindow(target);
+                    }
+                });
+            });
+
+            // --- 3. ОТКРЫТИЕ/ЗАКРЫТИЕ ОКОН ПО КЛИКУ НА ЗАГОЛОВОК ---
+            const windowHeaders = document.querySelectorAll('.window-header');
+
+            windowHeaders.forEach(header => {
+                header.addEventListener('click', function(e) {
+                    // Не срабатывает, если клик по ссылке внутри (чтобы не мешать)
+                    if (e.target.closest('a')) return;
+
+                    const winId = this.dataset.window;
+                    const card = document.getElementById(winId);
+                    if (card) {
+                        card.classList.toggle('open');
+                    }
+                });
+            });
+
+            // --- 4. ПРОВЕРКА ВОЗРАСТА ДЛЯ STEAM ---
+            const steamLink = document.getElementById('steamLink');
+            const STEAM_URL = 'https://steamcommunity.com/id/KIRAKRISUWU/';
+
+            steamLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const isAdult = confirm('Вам есть 16 лет или больше?');
+                if (isAdult) {
+                    window.open(STEAM_URL, '_blank');
+                } else {
+                    console.log('Доступ к Steam запрещён (возраст < 16).');
+                }
+            });
+
+            // --- 5. СЧЁТЧИК ЛАЙКОВ ---
+            const countDisplay = document.getElementById('countDisplay');
+            const incBtn = document.getElementById('incBtn');
+            const decBtn = document.getElementById('decBtn');
+
+            let count = parseInt(localStorage.getItem('kira-likes')) || 0;
+            countDisplay.textContent = count;
+
+            function updateCount(newVal) {
+                count = newVal;
+                countDisplay.textContent = count;
+                localStorage.setItem('kira-likes', String(count));
+            }
+
+            incBtn.addEventListener('click', function() {
+                updateCount(count + 1);
+                incBtn.style.transform = 'scale(0.92)';
+                setTimeout(() => incBtn.style.transform = '', 120);
+            });
+
+            decBtn.addEventListener('click', function() {
+                if (count > 0) {
+                    updateCount(count - 1);
+                    decBtn.style.transform = 'scale(0.92)';
+                    setTimeout(() => decBtn.style.transform = '', 120);
+                } else {
+                    decBtn.style.transform = 'translateX(-4px)';
+                    setTimeout(() => decBtn.style.transform = '', 200);
+                }
+            });
+
+            // --- 6. АВАТАР (мелочь) ---
+            const avatar = document.getElementById('avatarEl');
+            avatar.addEventListener('click', function() {
+                this.style.transform = 'scale(0.85) rotate(8deg)';
+                setTimeout(() => this.style.transform = '', 300);
+                const original = this.textContent;
+                this.textContent = '🌟';
+                setTimeout(() => this.textContent = original, 400);
+            });
+
+            // --- 7. ДОПОЛНИТЕЛЬНО: открыть первое окно по умолчанию (уже есть класс open) ---
+            console.log('✨ KiraKris — сайт загружен!');
+        })();
+    </script>
+
+</body>
+</html>
