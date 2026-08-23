@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
+    <title>KiraKris|KrisFox✨ Официальный сайт</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -12,8 +12,8 @@
         /* ----- CSS Variables ----- */
         :root {
             --bg-body: #121214;
-            --bg-card: rgba(0, 0, 0, 0.16); /* 16% полупрозрачности (жёлтый блок) */
-            --bg-sidebar: transparent;        /* Полная прозрачность (красный блок) */
+            --bg-card: rgba(0, 0, 0, 0.16); /* 16% полупрозрачности для окон */
+            --bg-sidebar: transparent;        /* Прозрачное боковое меню */
             --border-color: rgba(255, 255, 255, 0.15);
             --text-primary: #ffffff;
             --text-secondary: #dcdcdc;
@@ -59,7 +59,7 @@
             transition: background var(--transition), color var(--transition);
         }
 
-        /* ----- Sidebar (левое меню - красный блок) ----- */
+        /* ----- Sidebar (левое меню) ----- */
         .sidebar {
             width: 210px;
             background: var(--bg-sidebar);
@@ -157,7 +157,7 @@
             width: 100%;
         }
 
-        /* ----- Шапка профиля (зелёный блок) ----- */
+        /* ----- Шапка профиля ----- */
         .profile-header {
             display: flex;
             align-items: center;
@@ -212,7 +212,7 @@
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
 
-        /* ----- Блоки-карточки / Окна (жёлтый блок) ----- */
+        /* ----- Блоки-карточки (окна) ----- */
         .windows-grid {
             display: flex;
             flex-direction: column;
@@ -220,7 +220,7 @@
         }
 
         .window-card {
-            background: var(--bg-card); /* 16% полупрозрачность */
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             overflow: hidden;
@@ -293,7 +293,7 @@
             text-decoration: underline;
         }
 
-        /* Стили для ссылок внутри окон */
+        /* Ссылки внутри окон */
         .social-links {
             display: flex;
             flex-wrap: wrap;
@@ -461,10 +461,10 @@
 </head>
 <body>
 
-    <!-- ====== БОКОВОЕ МЕНЮ (СЛЕВА - КРАСНЫЙ БЛОК) ====== -->
+    <!-- ====== БОКОВОЕ МЕНЮ (СЛЕВА) ====== -->
     <aside class="sidebar" id="sidebar">
         <div class="brand">
-            <i class="fas fa-star"></i> Поиск
+            <i class="fas fa-star"></i> KiraKris|KrisFox
         </div>
 
         <button class="menu-item active" data-target="about">
@@ -491,17 +491,17 @@
     <main class="main">
         <div class="content-grid">
 
-            <!-- Шапка профиля (ЗЕЛЁНЫЙ БЛОК) -->
+            <!-- Шапка профиля -->
             <div class="profile-header">
                 <div class="avatar" id="avatarEl">✨</div>
                 <div class="profile-info">
-                    <h1>KiraKris | KrisFox</h1>
+                    <h1>KiraKris</h1>
                     <div class="sub">💜 разработчик · геймер · мечтатель</div>
                     <div class="bio">Привет! Я Кира — обожаю игры, веб-разработку и создавать уютные проекты.</div>
                 </div>
             </div>
 
-            <!-- ====== БЛОКИ-ОКНА (ЖЁЛТЫЙ БЛОК) ====== -->
+            <!-- ====== БЛОКИ-ОКНА ====== -->
             <div class="windows-grid">
 
                 <!-- Окно: Обо мне -->
@@ -745,6 +745,22 @@
                 this.textContent = '🌟';
                 setTimeout(() => this.textContent = original, 400);
             });
+
+            // --- 7. АВТОМАТИЧЕСКАЯ СМЕНА ЗАГОЛОВКА ВКЛАДКИ (каждые 60 сек) ---
+            const pageTitles = [
+                "KiraKris|KrisFox✨ Официальный сайт",
+                "💜 Добро пожаловать!",
+                "🎮 KiraKris · Разработчик & Геймер",
+                "✨ Загляни в проекты!"
+            ];
+            let currentTitleIndex = 0;
+
+            setInterval(() => {
+                currentTitleIndex = (currentTitleIndex + 1) % pageTitles.length;
+                document.title = pageTitles[currentTitleIndex];
+            }, 60000);
+
+            console.log('✨ KiraKris — сайт загружен!');
         })();
     </script>
 </body>
