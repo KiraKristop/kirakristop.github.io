@@ -12,30 +12,30 @@
         /* ----- CSS Variables ----- */
         :root {
             --bg-body: #121214;
-            --bg-card: #1a1a1e;
-            --bg-sidebar: #16161a;
-            --border-color: #2a2a30;
+            --bg-card: rgba(0, 0, 0, 0.16); /* 16% полупрозрачности (жёлтый блок) */
+            --bg-sidebar: transparent;        /* Полная прозрачность (красный блок) */
+            --border-color: rgba(255, 255, 255, 0.15);
             --text-primary: #ffffff;
-            --text-secondary: #a5a5a5;
+            --text-secondary: #dcdcdc;
             --accent: #bb86fc;
             --accent-hover: #9a6bdb;
-            --btn-bg: #252529;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --btn-bg: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             --radius: 18px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         [data-theme="light"] {
             --bg-body: #f0edf5;
-            --bg-card: #ffffff;
-            --bg-sidebar: #e8e4ee;
-            --border-color: #d0cce0;
-            --text-primary: #1a1a1e;
-            --text-secondary: #4a4a5a;
-            --accent: #7c4dff;
-            --accent-hover: #5f3ab0;
-            --btn-bg: #e8e6f0;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+            --bg-card: rgba(255, 255, 255, 0.16);
+            --bg-sidebar: transparent;
+            --border-color: rgba(255, 255, 255, 0.25);
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0e0;
+            --accent: #bb86fc;
+            --accent-hover: #9a6bdb;
+            --btn-bg: rgba(255, 255, 255, 0.15);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
 
         /* ----- Reset & Base ----- */
@@ -59,11 +59,11 @@
             transition: background var(--transition), color var(--transition);
         }
 
-        /* ----- Sidebar (левое меню) ----- */
+        /* ----- Sidebar (левое меню - красный блок) ----- */
         .sidebar {
             width: 210px;
             background: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
             padding: 28px 16px 24px;
             display: flex;
             flex-direction: column;
@@ -87,6 +87,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
         }
 
         .sidebar .brand i {
@@ -109,6 +110,7 @@
             background: transparent;
             width: 100%;
             text-align: left;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
 
         .menu-item i {
@@ -118,7 +120,7 @@
         }
 
         .menu-item:hover {
-            background: var(--btn-bg);
+            background: rgba(255, 255, 255, 0.12);
             color: var(--text-primary);
         }
 
@@ -126,7 +128,8 @@
             background: var(--accent);
             color: #121214;
             font-weight: 600;
-            box-shadow: 0 4px 14px rgba(187, 134, 252, 0.25);
+            box-shadow: 0 4px 14px rgba(187, 134, 252, 0.35);
+            text-shadow: none;
         }
 
         .menu-item.active i {
@@ -136,7 +139,7 @@
         .menu-divider {
             margin: 12px 0 8px;
             border: none;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         /* ----- Основная область ----- */
@@ -154,15 +157,20 @@
             width: 100%;
         }
 
-        /* ----- Шапка профиля ----- */
+        /* ----- Шапка профиля (зелёный блок) ----- */
         .profile-header {
             display: flex;
             align-items: center;
             gap: 24px;
             flex-wrap: wrap;
             margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .avatar {
@@ -177,7 +185,7 @@
             font-weight: 700;
             color: #121214;
             flex-shrink: 0;
-            box-shadow: 0 0 0 3px var(--bg-card), 0 0 0 6px var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.5), 0 0 0 6px var(--accent);
             transition: transform 0.3s;
             cursor: pointer;
         }
@@ -189,19 +197,22 @@
             font-size: 2rem;
             color: var(--accent);
             margin-bottom: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
         }
         .profile-info .sub {
             color: var(--text-secondary);
             font-size: 0.95rem;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
         .profile-info .bio {
             color: var(--text-secondary);
             margin-top: 6px;
             font-size: 0.95rem;
             line-height: 1.5;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
 
-        /* ----- Блоки-карточки (окна) ----- */
+        /* ----- Блоки-карточки / Окна (жёлтый блок) ----- */
         .windows-grid {
             display: flex;
             flex-direction: column;
@@ -209,12 +220,14 @@
         }
 
         .window-card {
-            background: var(--bg-card);
+            background: var(--bg-card); /* 16% полупрозрачность */
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: all var(--transition);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
         }
 
         .window-header {
@@ -227,7 +240,7 @@
             user-select: none;
         }
         .window-header:hover {
-            background: var(--btn-bg);
+            background: rgba(255, 255, 255, 0.08);
         }
         .window-header .title {
             font-weight: 600;
@@ -235,6 +248,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
         .window-header .title i {
             color: var(--accent);
@@ -268,6 +282,7 @@
             font-size: 0.95rem;
             line-height: 1.6;
             padding-top: 4px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
         }
         .window-body .content a {
             color: var(--accent);
@@ -308,7 +323,7 @@
         .counter-block {
             margin-top: 24px;
             padding-top: 18px;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -316,6 +331,7 @@
             font-size: 0.95rem;
             color: var(--text-secondary);
             flex-wrap: wrap;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
         }
         .counter-block button {
             background: var(--btn-bg);
@@ -341,13 +357,15 @@
             text-align: center;
         }
 
-        /* ----- Кнопка смены темы (в правом верхнем углу) ----- */
+        /* ----- Кнопка смены темы ----- */
         .theme-toggle {
             position: fixed;
             top: 20px;
             right: 24px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: var(--text-primary);
             width: 46px;
             height: 46px;
@@ -381,12 +399,12 @@
                 padding: 14px 16px;
                 gap: 4px;
                 border-right: none;
-                border-bottom: 1px solid var(--border-color);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.15);
                 position: sticky;
                 top: 0;
                 z-index: 10;
-                background: var(--bg-sidebar);
-                backdrop-filter: blur(6px);
+                background: rgba(0, 0, 0, 0.6);
+                backdrop-filter: blur(10px);
             }
             .sidebar .brand {
                 margin-bottom: 0;
@@ -443,7 +461,7 @@
 </head>
 <body>
 
-    <!-- ====== БОКОВОЕ МЕНЮ (СЛЕВА) ====== -->
+    <!-- ====== БОКОВОЕ МЕНЮ (СЛЕВА - КРАСНЫЙ БЛОК) ====== -->
     <aside class="sidebar" id="sidebar">
         <div class="brand">
             <i class="fas fa-star"></i> KiraKris|KrisFox
@@ -473,7 +491,7 @@
     <main class="main">
         <div class="content-grid">
 
-            <!-- Шапка профиля -->
+            <!-- Шапка профиля (ЗЕЛЁНЫЙ БЛОК) -->
             <div class="profile-header">
                 <div class="avatar" id="avatarEl">✨</div>
                 <div class="profile-info">
@@ -483,7 +501,7 @@
                 </div>
             </div>
 
-            <!-- ====== БЛОКИ-ОКНА ====== -->
+            <!-- ====== БЛОКИ-ОКНА (ЖЁЛТЫЙ БЛОК) ====== -->
             <div class="windows-grid">
 
                 <!-- Окно: Обо мне -->
@@ -600,7 +618,7 @@
         (function() {
             'use strict';
 
-            // --- 1. ТЕМА (светлая/тёмная) ---
+            // --- 1. ТЕМА ---
             const themeToggle = document.getElementById('themeToggle');
             const themeIcon = document.getElementById('themeIcon');
             const root = document.documentElement;
@@ -627,7 +645,7 @@
                 }
             });
 
-            // --- 2. МЕНЮ (подсветка активного пункта) ---
+            // --- 2. МЕНЮ ---
             const menuItems = document.querySelectorAll('.menu-item[data-target]');
             const windows = {
                 about: document.getElementById('win-about'),
@@ -637,7 +655,6 @@
                 contact: document.getElementById('win-contact')
             };
 
-            // Функция скролла к окну
             function scrollToWindow(winId) {
                 const win = windows[winId];
                 if (win) {
@@ -647,29 +664,25 @@
 
             menuItems.forEach(item => {
                 item.addEventListener('click', function() {
-                    // Убираем активный класс у всех
                     menuItems.forEach(m => m.classList.remove('active'));
                     this.classList.add('active');
 
                     const target = this.dataset.target;
                     if (target && windows[target]) {
-                        // Открываем окно, если оно закрыто
                         const win = windows[target];
                         if (!win.classList.contains('open')) {
                             win.classList.add('open');
                         }
-                        // Скроллим к нему
                         scrollToWindow(target);
                     }
                 });
             });
 
-            // --- 3. ОТКРЫТИЕ/ЗАКРЫТИЕ ОКОН ПО КЛИКУ НА ЗАГОЛОВОК ---
+            // --- 3. ОТКРЫТИЕ/ЗАКРЫТИЕ ОКОН ---
             const windowHeaders = document.querySelectorAll('.window-header');
 
             windowHeaders.forEach(header => {
                 header.addEventListener('click', function(e) {
-                    // Не срабатывает, если клик по ссылке внутри (чтобы не мешать)
                     if (e.target.closest('a')) return;
 
                     const winId = this.dataset.window;
@@ -680,7 +693,7 @@
                 });
             });
 
-            // --- 4. ПРОВЕРКА ВОЗРАСТА ДЛЯ STEAM ---
+            // --- 4. STEAM ---
             const steamLink = document.getElementById('steamLink');
             const STEAM_URL = 'https://steamcommunity.com/id/KIRAKRISUWU/';
 
@@ -689,8 +702,6 @@
                 const isAdult = confirm('Вам есть 16 лет или больше?');
                 if (isAdult) {
                     window.open(STEAM_URL, '_blank');
-                } else {
-                    console.log('Доступ к Steam запрещён (возраст < 16).');
                 }
             });
 
@@ -725,7 +736,7 @@
                 }
             });
 
-            // --- 6. АВАТАР (мелочь) ---
+            // --- 6. АВАТАР ---
             const avatar = document.getElementById('avatarEl');
             avatar.addEventListener('click', function() {
                 this.style.transform = 'scale(0.85) rotate(8deg)';
@@ -734,11 +745,7 @@
                 this.textContent = '🌟';
                 setTimeout(() => this.textContent = original, 400);
             });
-
-            // --- 7. ДОПОЛНИТЕЛЬНО: открыть первое окно по умолчанию (уже есть класс open) ---
-            console.log('✨ KiraKris — сайт загружен!');
         })();
     </script>
-
 </body>
 </html>
