@@ -11,31 +11,31 @@
     <style>
         /* ----- CSS Variables ----- */
         :root {
-            --bg-body: #121214;
-            --bg-card: #1a1a1e;
-            --bg-sidebar: #16161a;
-            --border-color: #2a2a30;
+            --bg-body: #0a0a0c;
+            --bg-card: rgba(26, 26, 30, 0.82);
+            --bg-sidebar: rgba(22, 22, 26, 0.88);
+            --border-color: rgba(255, 255, 255, 0.12);
             --text-primary: #ffffff;
-            --text-secondary: #a5a5a5;
+            --text-secondary: #c2c2c9;
             --accent: #bb86fc;
             --accent-hover: #9a6bdb;
-            --btn-bg: #252529;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --btn-bg: rgba(255, 255, 255, 0.08);
+            --shadow: 0 10px 35px rgba(0, 0, 0, 0.75);
             --radius: 18px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         [data-theme="light"] {
-            --bg-body: #f0edf5;
-            --bg-card: #ffffff;
-            --bg-sidebar: #e8e4ee;
-            --border-color: #d0cce0;
-            --text-primary: #1a1a1e;
-            --text-secondary: #4a4a5a;
-            --accent: #7c4dff;
-            --accent-hover: #5f3ab0;
-            --btn-bg: #e8e6f0;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+            --bg-body: #18181c;
+            --bg-card: rgba(30, 30, 36, 0.85);
+            --bg-sidebar: rgba(24, 24, 28, 0.9);
+            --border-color: rgba(255, 255, 255, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b8;
+            --accent: #9e6cf8;
+            --accent-hover: #834fe8;
+            --btn-bg: rgba(255, 255, 255, 0.1);
+            --shadow: 0 10px 35px rgba(0, 0, 0, 0.75);
         }
 
         /* ----- Reset & Base ----- */
@@ -47,7 +47,12 @@
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg-body);
+            background-color: var(--bg-body);
+            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('oboi.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
@@ -58,6 +63,8 @@
         .sidebar {
             width: 210px;
             background: var(--bg-sidebar);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border-right: 1px solid var(--border-color);
             padding: 28px 16px 24px;
             display: flex;
@@ -71,6 +78,7 @@
             overflow-y: auto;
             flex-shrink: 0;
             transition: background var(--transition), border-color var(--transition);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
         }
 
         .sidebar .brand {
@@ -82,6 +90,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            text-shadow: 0 0 12px rgba(187, 134, 252, 0.4);
         }
 
         .sidebar .brand i {
@@ -121,7 +130,7 @@
             background: var(--accent);
             color: #121214;
             font-weight: 600;
-            box-shadow: 0 4px 14px rgba(187, 134, 252, 0.25);
+            box-shadow: 0 4px 14px rgba(187, 134, 252, 0.35);
         }
 
         .menu-item.active i {
@@ -172,7 +181,7 @@
             font-weight: 700;
             color: #121214;
             flex-shrink: 0;
-            box-shadow: 0 0 0 3px var(--bg-card), 0 0 0 6px var(--accent);
+            box-shadow: 0 0 0 3px rgba(26, 26, 30, 0.8), 0 0 0 6px var(--accent);
             transition: transform 0.3s;
             cursor: pointer;
         }
@@ -184,6 +193,7 @@
             font-size: 2rem;
             color: var(--accent);
             margin-bottom: 2px;
+            text-shadow: 0 0 10px rgba(187, 134, 252, 0.35);
         }
         .profile-info .sub {
             color: var(--text-secondary);
@@ -205,6 +215,8 @@
 
         .window-card {
             background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             overflow: hidden;
@@ -342,6 +354,8 @@
             top: 20px;
             right: 24px;
             background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
             width: 46px;
@@ -381,7 +395,6 @@
                 top: 0;
                 z-index: 10;
                 background: var(--bg-sidebar);
-                backdrop-filter: blur(6px);
             }
             .sidebar .brand {
                 margin-bottom: 0;
@@ -595,7 +608,6 @@
         (function() {
             'use strict';
 
-            // --- 1. ТЕМА (светлая/тёмная) ---
             const themeToggle = document.getElementById('themeToggle');
             const themeIcon = document.getElementById('themeIcon');
             const root = document.documentElement;
@@ -622,7 +634,6 @@
                 }
             });
 
-            // --- 2. МЕНЮ (подсветка активного пункта) ---
             const menuItems = document.querySelectorAll('.menu-item[data-target]');
             const windows = {
                 about: document.getElementById('win-about'),
@@ -632,7 +643,6 @@
                 contact: document.getElementById('win-contact')
             };
 
-            // Функция скролла к окну
             function scrollToWindow(winId) {
                 const win = windows[winId];
                 if (win) {
@@ -642,29 +652,24 @@
 
             menuItems.forEach(item => {
                 item.addEventListener('click', function() {
-                    // Убираем активный класс у всех
                     menuItems.forEach(m => m.classList.remove('active'));
                     this.classList.add('active');
 
                     const target = this.dataset.target;
                     if (target && windows[target]) {
-                        // Открываем окно, если оно закрыто
                         const win = windows[target];
                         if (!win.classList.contains('open')) {
                             win.classList.add('open');
                         }
-                        // Скроллим к нему
                         scrollToWindow(target);
                     }
                 });
             });
 
-            // --- 3. ОТКРЫТИЕ/ЗАКРЫТИЕ ОКОН ПО КЛИКУ НА ЗАГОЛОВОК ---
             const windowHeaders = document.querySelectorAll('.window-header');
 
             windowHeaders.forEach(header => {
                 header.addEventListener('click', function(e) {
-                    // Не срабатывает, если клик по ссылке внутри (чтобы не мешать)
                     if (e.target.closest('a')) return;
 
                     const winId = this.dataset.window;
@@ -675,7 +680,6 @@
                 });
             });
 
-            // --- 4. ПРОВЕРКА ВОЗРАСТА ДЛЯ STEAM ---
             const steamLink = document.getElementById('steamLink');
             const STEAM_URL = 'https://steamcommunity.com/id/KIRAKRISUWU/';
 
@@ -684,12 +688,9 @@
                 const isAdult = confirm('Вам есть 16 лет или больше?');
                 if (isAdult) {
                     window.open(STEAM_URL, '_blank');
-                } else {
-                    console.log('Доступ к Steam запрещён (возраст < 16).');
                 }
             });
 
-            // --- 5. СЧЁТЧИК ЛАЙКОВ ---
             const countDisplay = document.getElementById('countDisplay');
             const incBtn = document.getElementById('incBtn');
             const decBtn = document.getElementById('decBtn');
@@ -720,7 +721,6 @@
                 }
             });
 
-            // --- 6. АВАТАР (мелочь) ---
             const avatar = document.getElementById('avatarEl');
             avatar.addEventListener('click', function() {
                 this.style.transform = 'scale(0.85) rotate(8deg)';
@@ -729,11 +729,7 @@
                 this.textContent = '🌟';
                 setTimeout(() => this.textContent = original, 400);
             });
-
-            // --- 7. ДОПОЛНИТЕЛЬНО: открыть первое окно по умолчанию (уже есть класс open) ---
-            console.log('✨ KiraKris — сайт загружен!');
         })();
     </script>
-
 </body>
 </html>
