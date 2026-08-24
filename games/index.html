@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam Game Zone - Игровой портал</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Motiva+Sans:wght@400;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <div class="brand">
+                <i class="fa-brands fa-steam logo-icon"></i>
+                <span class="brand-title">STEAM <span class="accent-text">ZONE</span></span>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="active"><i class="fa-solid fa-gamepad"></i> Главная</a>
+                <a href="#top-games"><i class="fa-solid fa-fire"></i> Популярное</a>
+                <a href="#catalog"><i class="fa-solid fa-list"></i> Каталог игр</a>
+            </nav>
+            <div class="search-box">
+                <i class="fa-solid fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Поиск игр на Steam...">
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <span class="badge featured-badge"><i class="fa-solid fa-star"></i> Выбор игроков</span>
+            <h1 id="heroTitle">Cyberpunk 2077: Phantom Liberty</h1>
+            <p id="heroDesc">Исследуйте Найт-Сити в незабываемом ролевом экшене с открытым миром от CD PROJEKT RED.</p>
+            <div class="hero-actions">
+                <a id="heroSteamBtn" href="https://store.steampowered.com/app/1091500/Cyberpunk_2077/" target="_blank" class="btn btn-steam">
+                    <i class="fa-brands fa-steam"></i> Открыть в Steam
+                </a>
+                <button id="heroDetailsBtn" class="btn btn-secondary">
+                    <i class="fa-solid fa-circle-info"></i> Подробнее
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <!-- Category Filter -->
+        <section class="filter-section" id="catalog">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-border-all"></i> Категории и Фильтры</h2>
+                <div class="results-count" id="resultsCount">Показано игр: 0</div>
+            </div>
+
+            <div class="filter-buttons" id="filterContainer">
+                <button class="filter-btn active" data-genre="all">Все игры</button>
+                <button class="filter-btn" data-genre="action">Экшен</button>
+                <button class="filter-btn" data-genre="rpg">RPG</button>
+                <button class="filter-btn" data-genre="multiplayer">Мультиплеер</button>
+                <button class="filter-btn" data-genre="strategy">Стратегии</button>
+                <button class="filter-btn" data-genre="free">Бесплатно</button>
+            </div>
+        </section>
+
+        <!-- Games Grid -->
+        <section class="games-section" id="top-games">
+            <div class="games-grid" id="gamesGrid">
+                <!-- Dynamic Game Cards will be rendered here via JS -->
+            </div>
+            <div class="no-results" id="noResults" style="display: none;">
+                <i class="fa-solid fa-ghost"></i>
+                <p>Игры по вашему запросу не найдены</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Game Details -->
+    <div class="modal-backdrop" id="gameModal">
+        <div class="modal-card">
+            <button class="modal-close" id="modalCloseBtn">&times;</button>
+            <div class="modal-body">
+                <div class="modal-media">
+                    <img id="modalImg" src="" alt="Game Banner">
+                </div>
+                <div class="modal-info">
+                    <div class="modal-header-info">
+                        <h2 id="modalTitle">Название игры</h2>
+                        <span class="price-badge" id="modalPrice">Бесплатно</span>
+                    </div>
+                    <div class="modal-tags" id="modalTags">
+                        <!-- Dynamic Tags -->
+                    </div>
+                    <p class="modal-description" id="modalDesc">Описание игры...</p>
+
+                    <div class="modal-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Разработчик:</span>
+                            <span class="meta-value" id="modalDeveloper">-</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Издатель:</span>
+                            <span class="meta-value" id="modalPublisher">-</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Дата выхода:</span>
+                            <span class="meta-value" id="modalRelease">-</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Рейтинг Steam:</span>
+                            <span class="meta-value rating" id="modalRating"><i class="fa-solid fa-thumbs-up"></i> 95% Очень положительные</span>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <a id="modalSteamLink" href="#" target="_blank" class="btn btn-steam btn-block">
+                            <i class="fa-brands fa-steam"></i> Перейти в Steam Store
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-left">
+                <p><i class="fa-brands fa-steam"></i> <strong>Steam Game Zone</strong> — Игровой каталог самых популярных игр в Steam.</p>
+                <p class="copyright">Все логотипы, торговые марки и изображения принадлежат их правообладателям (Valve Corporation / Издатели).</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
