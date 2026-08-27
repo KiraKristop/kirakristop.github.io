@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LABYRINTH ESCAPE: GHOST — скачать игру</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top left, #1a1a3e 0%, #0d0d1f 60%, #05050e 100%);
+      color: #e6e6ff;
+      padding: 1rem;
+    }
+
+    .card {
+      background: linear-gradient(145deg, rgba(30, 30, 70, 0.9), rgba(10, 10, 30, 0.95));
+      border: 1px solid rgba(139, 130, 255, 0.3);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(91, 84, 255, 0.15);
+      max-width: 480px;
+      width: 100%;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(112, 104, 255, 0.25), transparent 70%);
+      top: -80px;
+      right: -80px;
+      pointer-events: none;
+    }
+
+    .logo {
+      font-size: 3rem;
+      animation: pulse 3s ease-in-out infinite;
+      display: inline-block;
+      margin-bottom: 0.75rem;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(139, 130, 255, 0.6)); }
+      50% { transform: scale(1.12); filter: drop-shadow(0 0 22px rgba(139, 130, 255, 1)); }
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, #8f86ff, #ff8ad4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .tagline {
+      color: #9a9ad1;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    .tag {
+      display: inline-block;
+      background: rgba(139, 130, 255, 0.15);
+      border: 1px solid rgba(139, 130, 255, 0.4);
+      color: #c6c2ff;
+      border-radius: 20px;
+      padding: 0.25rem 0.9rem;
+      font-size: 0.8rem;
+      margin: 0.2rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 1.1rem;
+      border: none;
+      border-radius: 14px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #7c6dff, #b054ff);
+      color: #fff;
+      box-shadow: 0 8px 25px rgba(124, 109, 255, 0.5);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-bottom: 2rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(124, 109, 255, 0.7);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .info {
+      text-align: left;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.35rem 0;
+      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-row span:first-child {
+      color: #9a9ad1;
+    }
+
+    .info-row span:last-child {
+      color: #e6e6ff;
+      font-weight: 600;
+    }
+
+    .footer {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: #6a6a9a;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">👻</div>
+    <h1>LABYRINTH ESCAPE: GHOST</h1>
+    <p class="tagline">Хоррор-игра про побег из загадочного лабиринта</p>
+    <div>
+      <span class="tag">Windows</span>
+      <span class="tag">Хоррор</span>
+      <span class="tag">Лабиринт</span>
+    </div>
+    <a class="btn" href="https://drive.google.com/file/d/1T96DIqMkclR2DdKwlJRl8_pqn8-SjLIT/view?usp=sharing" target="_blank" rel="noopener noreferrer">Скачать игру</a>
+    <div class="info">
+      <div class="info-row"><span>Версия</span><span>1.0</span></div>
+      <div class="info-row"><span>Платформа</span><span>Windows</span></div>
+      <div class="info-row"><span>Жанр</span><span>Хоррор, головоломка</span></div>
+      <div class="info-row"><span>Файл</span><span>Google Диск</span></div>
+    </div>
+    <div class="footer">© LABYRINTH ESCAPE: GHOST</div>
+  </div>
+</body>
+</html>
