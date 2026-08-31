@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KiraKris — разработчик · геймер · мечтатель</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="home">
+<div class="bg"></div>
+<nav class="nav">
+  <div class="container nav__inner">
+    <a class="logo" href="index.html"><div class="logo__mark">KK</div><span>KiraKris</span></a>
+    <div class="nav__links" id="navLinks">
+      <a href="index.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Главная</a>
+      <a href="projects.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Проекты</a>
+      <a href="os.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M2 12h20"/><path d="M12 2v20"/></svg>Образы OS</a>
+      <a href="contact.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Контакты</a>
+      <a class="nav__cta" href="contact.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Написать</a>
+    </div>
+    <button class="burger" id="burger" aria-label="menu">☰</button>
+  </div>
+</nav>
+
+<main class="home-main">
+  <div class="container" style="width:100%">
+    <section class="hero">
+      <div>
+        <div class="eyebrow"><i></i> открыта к проектам · отвечаю за день</div>
+        <h1>KiraKris<br><em>KrisFox</em></h1>
+        <p>Делаю уютные цифровые продукты — чистый код, мягкий дизайн и капля магии. Инди-игры, аниме и веб, который хочется трогать.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="projects.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Проекты →</a>
+          <a class="btn btn--glass" href="https://github.com/KiraKristop" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 4 5 4 5 4c-.28 1.15-.28 2.35 0 3.5A4.48 4.48 0 0 0 4 11c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.2 1.23-.1 1.85"/></svg>GitHub</a>
+        </div>
+        <div class="mini-stack">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>HTML · CSS · JS</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 0-9.5 7H12V2z"/><path d="M12 12L2.5 9.5A10 10 0 0 0 12 22V12z"/><path d="M12 12l9.5-2.5A10 10 0 0 1 12 22V12z"/></svg>Python</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8a4 4 0 0 1 4 4"/><path d="M12 8a4 4 0 0 0-4 4"/></svg>Figma · UI/UX</span>
+        </div>
+      </div>
+
+      <div class="glass profile">
+        <div class="profile__head">
+          <div class="avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.4 7.2H22l-6.2 4.5 2.4 7.3L12 16.5 5.8 21l2.4-7.3L2 9.2h7.6z"/></svg></div>
+          <div>
+            <div class="profile__name">Kira Kristop</div>
+            <div class="profile__role">разработчик · геймер · мечтатель</div>
+          </div>
+        </div>
+        <p class="profile__bio">Создаю лёгкие интерфейсы с liquid glass, микросетками и тёплой типографикой. Люблю, когда сайт ощущается как предмет.</p>
+        <div class="profile__actions">
+          <a class="pill-btn primary" href="https://t.me/KiraKris02" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Telegram</a>
+          <a class="pill-btn" href="https://github.com/KiraKristop" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 4 5 4 5 4c-.28 1.15-.28 2.35 0 3.5A4.48 4.48 0 0 0 4 11c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.2 1.23-.1 1.85"/></svg>GitHub</a>
+          <a class="pill-btn" href="https://www.youtube.com/@KiraKris02" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>YouTube</a>
+        </div>
+        <div class="quick-row">
+          <a class="quick" href="projects.html">
+            <div class="quick__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+            <div><b>Проекты</b><span>3 · смотреть →</span></div>
+          </a>
+          <a class="quick" href="os.html">
+            <div class="quick__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></div>
+            <div><b>Образы OS</b><span>Win10 · beta</span></div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <span>© 2026 KiraKris · KrisFox · liquid glass</span>
+    <span><a href="https://t.me/KiraKris02">Telegram</a> · <a href="https://steamcommunity.com/id/KIRAKRISUWU/">Steam</a></span>
+  </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

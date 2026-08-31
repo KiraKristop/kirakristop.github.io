@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Проекты — KiraKris</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg"></div>
+<nav class="nav"><div class="container nav__inner">
+  <a class="logo" href="index.html"><div class="logo__mark">KK</div><span>KiraKris</span></a>
+  <div class="nav__links" id="navLinks">
+    <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Главная</a>
+    <a href="projects.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Проекты</a>
+    <a href="os.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M2 12h20"/><path d="M12 2v20"/></svg>Образы OS</a>
+    <a href="contact.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Контакты</a>
+    <a class="nav__cta" href="contact.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Написать</a>
+  </div>
+  <button class="burger" id="burger">☰</button>
+</div></nav>
+
+<main class="container">
+  <div class="page-head">
+    <h1>Проекты <span>и эксперименты</span></h1>
+    <p>Всё, что делаю с любовью — от сайтов до ботов. Больше кода на <a href="https://github.com/KiraKristop" target="_blank" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px">GitHub</a>.</p>
+  </div>
+
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card card--accent">
+      <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+      <h3>Сайт-визитка</h3>
+      <p>Текущий liquid glass сайт — портфолио, соцсети и контакты. Стартовая точка экосистемы.</p>
+      <div class="card__foot"><span class="tag">live</span><span class="tag">glass</span></div>
+      <div style="margin-top:14px"><a class="btn btn--glass" style="padding:9px 16px" href="https://kirakristop.github.io" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Открыть</a></div>
+    </div>
+    <div class="card">
+      <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M2 12h20"/><path d="M12 2v20"/></svg></div>
+      <h3>osinfo — коллекция образов</h3>
+      <p>Подборка образов ОС для тестов. Сейчас beta — доступна Windows 10, остальное скоро.</p>
+      <div class="card__foot"><span class="tag">beta</span><span class="tag">OS</span></div>
+      <div style="margin-top:14px"><a class="btn btn--primary" style="padding:9px 16px" href="os.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>К образам →</a></div>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card" id="bot">
+      <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect x="2" y="8" width="20" height="12" rx="4"/><circle cx="9" cy="14" r="1" fill="currentColor"/><circle cx="15" cy="14" r="1" fill="currentColor"/></svg></div>
+      <h3>Telegram-бот</h3>
+      <p>Утилита для уведомлений и автоматизации. Webhook, команды, интеграция — в работе.</p>
+      <div class="card__foot"><span class="tag">Python</span><span class="tag">WIP</span></div>
+    </div>
+    <div class="card">
+      <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="3.5"/><path d="M13.5 2a7.5 7.5 0 0 0 0 15"/><path d="M6 18a4 4 0 0 0 4-4"/><circle cx="6" cy="18" r="2"/></svg></div>
+      <h3>Дизайн-системы</h3>
+      <p>Эксперименты с Figma, сетками и glass-морфизмом. Чисто и тактильно.</p>
+      <div class="card__foot"><span class="tag">Figma</span><span class="tag">glass</span></div>
+    </div>
+    <div class="card">
+      <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><rect x="14" y="10" width="4" height="4" rx="1"/><path d="M14 8V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1"/></svg></div>
+      <h3>Gaming-профили</h3>
+      <p>Steam, инди-игры и подборки. Скрины и находки — в Telegram и YouTube.</p>
+      <div class="card__foot"><span class="tag">Steam</span><span class="tag">YouTube</span></div>
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+        <a class="btn btn--glass" style="padding:8px 14px" href="https://steamcommunity.com/id/KIRAKRISUWU/" target="_blank">Steam</a>
+        <a class="btn btn--glass" style="padding:8px 14px" href="https://www.youtube.com/@KiraKris02" target="_blank">YouTube</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass" style="margin-top:16px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+    <div><h3 style="font-size:15px">Есть идея?</h3><p style="color:var(--muted);font-size:13.5px">Обсудим дизайн, стек и сроки. Отвечаю за день.</p></div>
+    <a class="btn btn--primary" href="contact.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Связаться</a>
+  </div>
+</main>
+
+<footer class="footer"><div class="container footer__inner"><span>© 2026 KiraKris · liquid glass</span><a href="index.html">← На главную</a></div></footer>
+<script src="script.js"></script>
+</body>
+</html>

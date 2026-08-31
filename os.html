@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Образы OS — KiraKris</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg"></div>
+<nav class="nav"><div class="container nav__inner">
+  <a class="logo" href="index.html"><div class="logo__mark">KK</div><span>KiraKris</span></a>
+  <div class="nav__links" id="navLinks">
+    <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Главная</a>
+    <a href="projects.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Проекты</a>
+    <a href="os.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M2 12h20"/><path d="M12 2v20"/></svg>Образы OS</a>
+    <a href="contact.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Контакты</a>
+    <a class="nav__cta" href="contact.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Написать</a>
+  </div>
+  <button class="burger" id="burger">☰</button>
+</div></nav>
+
+<main class="container">
+  <div class="page-head">
+    <h1>KrisOS <span>INFO</span></h1>
+    <p>Коллекция образов ОС. Оригинал: <a href="https://km2911test.github.io/osinfo/" target="_blank" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px">km2911test.github.io/osinfo</a></p>
+  </div>
+
+  <div class="grid3">
+    <a class="card card--accent" href="https://km2911test.github.io/win10OS/" target="_blank" rel="noopener">
+      <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 3v18"/><path d="M2 9h20"/><path d="M2 15h20"/></svg></div>
+      <h3>KrisOS Win10</h3>
+      <p>Доступен — скриншоты, инфо и загрузка на оригинале.</p>
+      <div class="card__foot"><span class="tag" style="background:#22c55e;color:white;border-color:transparent">доступно</span><span class="tag">Windows 10</span></div>
+      <div style="margin-top:12px;color:var(--accent);font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:6px">Открыть <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></div>
+    </a>
+    <div class="card" style="opacity:.55">
+      <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg></div>
+      <h3>Слот 2</h3>
+      <p>Резерв под следующую сборку.</p>
+      <div class="card__foot"><span class="tag">скоро</span></div>
+    </div>
+    <div class="card" style="opacity:.55">
+      <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg></div>
+      <h3>Слот 3</h3>
+      <p>Зарезервировано.</p>
+      <div class="card__foot"><span class="tag">скоро</span></div>
+    </div>
+    <div class="card" style="opacity:.55">
+      <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/></svg></div>
+      <h3>Слот 4</h3>
+      <p>Следи за обновлениями в Telegram.</p>
+      <div class="card__foot"><span class="tag">скоро</span></div>
+    </div>
+    <div class="card" style="opacity:.55">
+      <div class="card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/></svg></div>
+      <h3>Слот 5</h3>
+      <p>Слот в резерве.</p>
+      <div class="card__foot"><span class="tag">скоро</span></div>
+    </div>
+    <div class="glass" style="display:grid;place-items:center;text-align:center;min-height:180px;padding:20px">
+      <div>
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.18);display:grid;place-items:center;margin:0 auto 10px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20" style="color:var(--accent)"><path d="M12 2l2.4 7.2H22l-6.2 4.5 2.4 7.3L12 16.5 5.8 21l2.4-7.3L2 9.2h7.6z"/></svg></div>
+        <h3>Предложить образ</h3>
+        <p style="color:var(--muted);font-size:13.5px;margin-top:4px">Хочешь конкретную ОС? Напиши.</p>
+        <div style="margin-top:12px"><a class="btn btn--glass" style="padding:8px 14px" href="contact.html">Связаться</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass" style="margin-top:16px;padding:14px 16px">
+    <p style="color:var(--muted);font-size:12.5px;display:flex;gap:8px;align-items:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Все образы как есть — проверяй суммы и лицензию. Внешние ссылки → km2911test.github.io.</p>
+  </div>
+</main>
+
+<footer class="footer"><div class="container footer__inner"><span>© 2026 KiraKris · osinfo beta</span><a href="index.html">← На главную</a></div></footer>
+<script src="script.js"></script>
+</body>
+</html>
