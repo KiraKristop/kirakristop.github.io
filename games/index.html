@@ -41,6 +41,7 @@
     border-bottom: 3px solid #535353;
     touch-action: none;
     transition: background 0.3s, border-color 0.3s;
+    outline: none;
   }
   body.night canvas {
     background: #1a1a2e;
@@ -74,6 +75,7 @@
     padding: 20px;
     transition: background 0.3s;
     z-index: 3;
+    cursor: pointer;
   }
   body.night .overlay { background: rgba(26, 26, 46, 0.9); }
   .overlay.hidden { display: none; }
@@ -123,7 +125,6 @@
   }
   body.night .controls-hint { color: #7070a0; }
 
-  /* Большая кнопка прыжка для мобильных */
   .jump-btn {
     position: absolute;
     bottom: 40px;
@@ -160,7 +161,7 @@
 <body>
 
 <div class="game-container">
-  <canvas id="canvas" width="800" height="300"></canvas>
+  <canvas id="canvas" width="800" height="300" tabindex="0"></canvas>
 
   <div class="ui">
     <div>HI <span id="hiScore">00000</span></div>
@@ -237,7 +238,6 @@
   let nightMode = false;
   let nightTimer = 0;
 
-  // ==== Пыль ====
   function spawnDust(x, y) {
     for (let i = 0; i < 3; i++) {
       particles.push({
@@ -321,7 +321,7 @@
     }
   }
 
-  // ==== ГЛАВНАЯ ФУНКЦИЯ ПРЫЖКА ====
+  // ==== ПРЫЖОК ====
   function jump() {
     if (state === STATE.MENU) {
       startGame();
@@ -343,6 +343,7 @@
     resetGame();
     state = STATE.PLAYING;
     overlay.classList.add('hidden');
+    canvas.focus();
   }
 
   function gameOver() {
@@ -361,37 +362,66 @@
   }
 
   // ==== УПРАВЛЕНИЕ ====
-  const keys = { duck: false };
+  // Ключевой момент: слушаем keydown на window с { capture: true }
+  // Это гарантирует, что пробел будет пойман раньше, чем его обработает браузер
+  const jumpKeys = [' ', 'Space', 'ArrowUp', 'Up', 'w', 'W', 'к', 'К', 'ц', 'Ц'];
 
-  // --- КЛАВИАТУРА ---
-  document.addEventListener('keydown', (e) => {
-    const k = e.key.toLowerCase();
-    const code = e.code;
+  function isJumpKey(e) {
+    // Проверяем по code (не зависит от раскладки) и по key
+    return e.code === 'Space'
+        || e.code === 'ArrowUp'
+        || e.code === 'KeyW'
+        || e.key === ' '
+        || e.key === 'Spacebar'
+        || e.key === 'ArrowUp'
+        || e.key.toLowerCase() === 'w'
+        || e.key.toLowerCase() === 'ц'; // W на русской раскладке
+  }
 
-    // Прыжок
-    if (code === 'Space' || k === ' ' || k === 'arrowup' || k === 'w' || code === 'KeyW' || code === 'ArrowUp') {
+  function isDuckKey(e) {
+    return e.code === 'ArrowDown'
+        || e.code === 'KeyS'
+        || e.key === 'ArrowDown'
+        || e.key.toLowerCase() === 's'
+        || e.key.toLowerCase() === 'ы'; // S на русской раскладке
+  }
+
+  // Фаза capture — перехватываем раньше всех
+  window.addEventListener('keydown', (e) => {
+    if (isJumpKey(e)) {
       e.preventDefault();
+      e.stopPropagation();
+      // Игнорируем автоповтор (удержание клавиши)
+      if (e.repeat) return;
       jump();
       return;
     }
-    // Приседание
-    if (k === 'arrowdown' || k === 's' || code === 'KeyS' || code === 'ArrowDown') {
+    if (isDuckKey(e)) {
       e.preventDefault();
-      keys.duck = true;
+      e.stopPropagation();
       if (state === STATE.PLAYING) dino.ducking = true;
     }
-  });
+  }, { capture: true });
 
-  document.addEventListener('keyup', (e) => {
-    const k = e.key.toLowerCase();
-    const code = e.code;
-    if (k === 'arrowdown' || k === 's' || code === 'KeyS' || code === 'ArrowDown') {
-      keys.duck = false;
+  window.addEventListener('keyup', (e) => {
+    if (isDuckKey(e)) {
+      e.preventDefault();
+      e.stopPropagation();
       dino.ducking = false;
     }
+  }, { capture: true });
+
+  // Дополнительная страховка: фокусируем окно при клике
+  window.addEventListener('mousedown', () => {
+    window.focus();
   });
 
-  // --- ТАЧ / МЫШЬ на канвасе ---
+  // Страховка от потери фокуса
+  window.addEventListener('blur', () => {
+    dino.ducking = false;
+  });
+
+  // ==== ТАЧ / МЫШЬ ====
   let pointerDown = false;
 
   function onPointerDown(e) {
@@ -400,7 +430,7 @@
     jump();
   }
 
-  function onPointerUp(e) {
+  function onPointerUp() {
     pointerDown = false;
   }
 
@@ -410,20 +440,20 @@
   canvas.addEventListener('mouseup', onPointerUp);
   canvas.addEventListener('touchcancel', onPointerUp);
 
-  // --- Оверлей ---
   overlay.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); }, { passive: false });
   overlay.addEventListener('mousedown', (e) => { e.preventDefault(); jump(); });
 
-  // --- Кнопка прыжка для мобильных ---
   jumpBtn.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); }, { passive: false });
   jumpBtn.addEventListener('mousedown', (e) => { e.preventDefault(); jump(); });
 
-  // Защита от скролла
   window.addEventListener('touchmove', (e) => {
-    if (state === STATE.PLAYING || state === STATE.MENU || state === STATE.GAME_OVER) {
-      e.preventDefault();
-    }
+    e.preventDefault();
   }, { passive: false });
+
+  // Запрещаем скролл пробелом
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') e.preventDefault();
+  }, { capture: true });
 
   // ==== ОБНОВЛЕНИЕ ====
   function update() {
@@ -444,7 +474,6 @@
     if (speed < MAX_SPEED) speed += 0.0012;
     score = Math.floor(frame / 6);
 
-    // Физика динозавра
     if (!dino.onGround) {
       dino.vy += dino.gravity;
       dino.y += dino.vy;
@@ -459,27 +488,23 @@
     const currentH = dino.ducking && dino.onGround ? dino.h * 0.6 : dino.h;
     const currentY = GROUND_Y - currentH;
 
-    // Анимация ног
     dino.legTimer++;
     if (dino.legTimer > Math.max(3, 8 - Math.floor(speed / 2))) {
       dino.legTimer = 0;
       dino.legFrame = (dino.legFrame + 1) % 2;
     }
 
-    // Моргание
     dino.blinkTimer++;
     if (dino.blinkTimer > 100) {
       dino.blinking = !dino.blinking;
       dino.blinkTimer = 0;
     }
 
-    // Спавн
     const spawnRate = Math.max(50, 100 - speed * 3);
     if (frame % Math.floor(spawnRate) === 0 && frame > 40) {
       spawnObstacle();
     }
 
-    // Кактусы
     for (let i = obstacles.length - 1; i >= 0; i--) {
       const o = obstacles[i];
       o.x -= speed;
@@ -490,7 +515,6 @@
       )) { gameOver(); return; }
     }
 
-    // Птицы
     for (let i = birds.length - 1; i >= 0; i--) {
       const b = birds[i];
       b.x -= speed + 1.2;
@@ -688,6 +712,9 @@
 
   resetGame();
   loop();
+
+  // Автофокус канваса для гарантии перехвата клавиш
+  canvas.focus();
 })();
 </script>
 </body>
