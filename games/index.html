@@ -1,1 +1,575 @@
-Betta 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Мини джойстик + WASD</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(145deg, #1a2639 0%, #0d1b2a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            touch-action: pan-x pan-y; 
+        }
+        .game-wrapper {
+            background: #0f172a;
+            padding: 1.5rem 1.5rem 2rem;
+            border-radius: 3rem;
+            box-shadow: 0 25px 35px rgba(0,0,0,0.8), inset 0 0 10px #2e3b4e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas {
+            display: block;
+            background: #1e2b3c;
+            border-radius: 2rem;
+            box-shadow: inset 0 0 30px #00000055, 0 10px 20px #00000080;
+            width: 100%;
+            height: auto;
+            max-width: 500px;
+            aspect-ratio: 1 / 1;
+            cursor: crosshair;
+            touch-action: none; /* для канваса отключаем скролл */
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: 0 0.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .wasd-hint {
+            display: flex;
+            gap: 0.5rem;
+            background: #1e2b3c;
+            padding: 0.6rem 1rem;
+            border-radius: 3rem;
+            box-shadow: inset 0 5px 0 #0b1119, 0 8px 12px black;
+        }
+        .key {
+            width: 3rem;
+            height: 3rem;
+            background: #2e3f55;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #b0d0ff;
+            box-shadow: 0 6px 0 #0a121c, 0 5px 10px black;
+            transition: all 0.05s;
+            text-shadow: 0 2px 2px black;
+        }
+        .key.pressed {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #0a121c, 0 5px 10px black;
+            background: #3f5a7a;
+            color: white;
+        }
+        /* Джойстик */
+        .joystick-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            touch-action: none;
+        }
+        .joystick-base {
+            width: 130px;
+            height: 130px;
+            background: #1e2b3c;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: inset 0 0 20px #000000, 0 12px 0 #0a121c, 0 15px 20px black;
+            touch-action: none;
+            cursor: pointer;
+        }
+        .joystick-knob {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #b0d0ff, #4a6c8f);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 8px 0 #0a121c, 0 10px 15px black;
+            transition: all 0.02s;
+            pointer-events: none;
+            touch-action: none;
+        }
+        .joystick-knob.active {
+            box-shadow: 0 4px 0 #0a121c, 0 10px 15px black;
+        }
+        .footer-note {
+            margin-top: 0.8rem;
+            color: #6b7f99;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        /* Мобильная адаптация */
+        @media (max-width: 500px) {
+            .game-wrapper {
+                padding: 1rem;
+                border-radius: 2rem;
+            }
+            .key {
+                width: 2.4rem;
+                height: 2.4rem;
+                font-size: 1rem;
+                border-radius: 0.8rem;
+            }
+            .joystick-base {
+                width: 110px;
+                height: 110px;
+            }
+            .joystick-knob {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="game-wrapper">
+    <canvas id="gameCanvas" width="500" height="500"></canvas>
+    
+    <div class="controls">
+        <!-- WASD подсказка -->
+        <div class="wasd-hint">
+            <div class="key" id="keyW">W</div>
+            <div class="key" id="keyA">A</div>
+            <div class="key" id="keyS">S</div>
+            <div class="key" id="keyD">D</div>
+        </div>
+        
+        <!-- Джойстик -->
+        <div class="joystick-area">
+            <div class="joystick-base" id="joystickBase">
+                <div class="joystick-knob" id="joystickKnob"></div>
+            </div>
+            <div class="footer-note">← джойстик →</div>
+        </div>
+    </div>
+    <div class="footer-note" style="margin-top: 0.2rem;">WASD или джойстик</div>
+</div>
+
+<script>
+    (function() {
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Размеры игрового мира (логические)
+        const WORLD_WIDTH = 500;
+        const WORLD_HEIGHT = 500;
+        
+        // Настройка канваса с учётом devicePixelRatio для чёткости
+        function setupCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            // Устанавливаем реальные размеры буфера
+            canvas.width = WORLD_WIDTH * dpr;
+            canvas.height = WORLD_HEIGHT * dpr;
+            // Масштабируем контекст
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        setupCanvas();
+        
+        // Персонаж
+        const player = {
+            x: WORLD_WIDTH / 2,
+            y: WORLD_HEIGHT / 2,
+            radius: 22,
+            speed: 4.2,
+            color: '#7aaae0',
+            glow: '#aad0ff'
+        };
+        
+        // Враги (простые движущиеся цели)
+        const enemies = [];
+        const ENEMY_COUNT = 5;
+        const ENEMY_RADIUS = 18;
+        const ENEMY_SPEED = 1.6;
+        
+        for (let i = 0; i < ENEMY_COUNT; i++) {
+            enemies.push({
+                x: Math.random() * (WORLD_WIDTH - 2 * ENEMY_RADIUS) + ENEMY_RADIUS,
+                y: Math.random() * (WORLD_HEIGHT - 2 * ENEMY_RADIUS) + ENEMY_RADIUS,
+                vx: (Math.random() - 0.5) * ENEMY_SPEED,
+                vy: (Math.random() - 0.5) * ENEMY_SPEED,
+                radius: ENEMY_RADIUS,
+                color: '#e06b6b',
+                glow: '#ff9e9e'
+            });
+        }
+        
+        // Управление: WASD
+        const keys = {
+            w: false, a: false, s: false, d: false
+        };
+        
+        // Вектор направления от джойстика (нормализованный, значения от -1 до 1)
+        let joystickVector = { x: 0, y: 0 };
+        
+        // DOM элементы
+        const keyW = document.getElementById('keyW');
+        const keyA = document.getElementById('keyA');
+        const keyS = document.getElementById('keyS');
+        const keyD = document.getElementById('keyD');
+        const joystickBase = document.getElementById('joystickBase');
+        const joystickKnob = document.getElementById('joystickKnob');
+        
+        // Обновление визуального состояния клавиш
+        function updateKeyVisual(key, pressed) {
+            const el = key === 'w' ? keyW : key === 'a' ? keyA : key === 's' ? keyS : keyD;
+            if (pressed) {
+                el.classList.add('pressed');
+            } else {
+                el.classList.remove('pressed');
+            }
+        }
+        
+        // Обработчики клавиатуры
+        window.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            if (key === 'w' || key === 'a' || key === 's' || key === 'd') {
+                e.preventDefault(); // чтобы страница не скроллилась
+                if (!keys[key]) {
+                    keys[key] = true;
+                    updateKeyVisual(key, true);
+                }
+            }
+        });
+        
+        window.addEventListener('keyup', (e) => {
+            const key = e.key.toLowerCase();
+            if (key === 'w' || key === 'a' || key === 's' || key === 'd') {
+                e.preventDefault();
+                if (keys[key]) {
+                    keys[key] = false;
+                    updateKeyVisual(key, false);
+                }
+            }
+        });
+        
+        // Сброс клавиш при потере фокуса
+        window.addEventListener('blur', () => {
+            ['w', 'a', 's', 'd'].forEach(k => {
+                if (keys[k]) {
+                    keys[k] = false;
+                    updateKeyVisual(k, false);
+                }
+            });
+        });
+        
+        // ========== ДЖОЙСТИК ==========
+        let joystickActive = false;
+        const maxDistance = 42; // максимальное смещение ручки от центра (для базы 130px / 2 - 30 ≈ 35, но с запасом)
+        
+        // Получить координаты центра базы джойстика относительно окна
+        function getBaseCenter() {
+            const rect = joystickBase.getBoundingClientRect();
+            return {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2
+            };
+        }
+        
+        // Обновить положение ручки и вектор джойстика
+        function updateJoystick(clientX, clientY) {
+            const center = getBaseCenter();
+            let dx = clientX - center.x;
+            let dy = clientY - center.y;
+            
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Ограничиваем смещение
+            if (distance > maxDistance) {
+                dx = (dx / distance) * maxDistance;
+                dy = (dy / distance) * maxDistance;
+            }
+            
+            // Смещаем ручку
+            joystickKnob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+            
+            // Вектор направления (нормализованный)
+            const normX = dx / maxDistance;
+            const normY = dy / maxDistance;
+            joystickVector.x = Math.abs(normX) > 0.1 ? normX : 0;
+            joystickVector.y = Math.abs(normY) > 0.1 ? normY : 0;
+            
+            // Небольшая корректировка для плавности: можно оставить как есть
+            // Если вектор слишком мал — обнуляем
+            if (Math.abs(joystickVector.x) < 0.05) joystickVector.x = 0;
+            if (Math.abs(joystickVector.y) < 0.05) joystickVector.y = 0;
+        }
+        
+        // Сброс джойстика в центр
+        function resetJoystick() {
+            joystickActive = false;
+            joystickKnob.style.transform = `translate(-50%, -50%)`;
+            joystickVector.x = 0;
+            joystickVector.y = 0;
+            joystickKnob.classList.remove('active');
+        }
+        
+        // Обработчики для джойстика (мышь и тач)
+        function onJoystickStart(e) {
+            e.preventDefault();
+            joystickActive = true;
+            joystickKnob.classList.add('active');
+            
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            updateJoystick(clientX, clientY);
+            
+            // Добавляем слушатели на движение и отпускание
+            if (e.touches) {
+                window.addEventListener('touchmove', onJoystickMove, { passive: false });
+                window.addEventListener('touchend', onJoystickEnd);
+                window.addEventListener('touchcancel', onJoystickEnd);
+            } else {
+                window.addEventListener('mousemove', onJoystickMove);
+                window.addEventListener('mouseup', onJoystickEnd);
+            }
+        }
+        
+        function onJoystickMove(e) {
+            if (!joystickActive) return;
+            e.preventDefault();
+            
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            updateJoystick(clientX, clientY);
+        }
+        
+        function onJoystickEnd(e) {
+            if (!joystickActive) return;
+            e.preventDefault();
+            
+            // Удаляем слушатели
+            if (e.touches) {
+                window.removeEventListener('touchmove', onJoystickMove);
+                window.removeEventListener('touchend', onJoystickEnd);
+                window.removeEventListener('touchcancel', onJoystickEnd);
+            } else {
+                window.removeEventListener('mousemove', onJoystickMove);
+                window.removeEventListener('mouseup', onJoystickEnd);
+            }
+            
+            resetJoystick();
+        }
+        
+        // Навешиваем обработчики на базу джойстика
+        joystickBase.addEventListener('mousedown', onJoystickStart);
+        joystickBase.addEventListener('touchstart', onJoystickStart, { passive: false });
+        
+        // Предотвращаем контекстное меню на джойстике
+        joystickBase.addEventListener('contextmenu', (e) => e.preventDefault());
+        
+        // ========== ИГРОВОЙ ЦИКЛ ==========
+        
+        // Обновление позиции игрока с учётом WASD и джойстика
+        function updatePlayer() {
+            let moveX = 0;
+            let moveY = 0;
+            
+            // WASD
+            if (keys.w) moveY -= 1;
+            if (keys.s) moveY += 1;
+            if (keys.a) moveX -= 1;
+            if (keys.d) moveX += 1;
+            
+            // Нормализация диагонали для WASD
+            if (moveX !== 0 && moveY !== 0) {
+                const length = Math.sqrt(moveX * moveX + moveY * moveY);
+                moveX /= length;
+                moveY /= length;
+            }
+            
+            // Джойстик (имеет приоритет, если активен и вектор не нулевой)
+            if (joystickVector.x !== 0 || joystickVector.y !== 0) {
+                moveX = joystickVector.x;
+                moveY = joystickVector.y;
+                // Уже нормализован (в пределах -1..1)
+            }
+            
+            // Применяем движение
+            if (moveX !== 0 || moveY !== 0) {
+                // Ограничиваем длину вектора до 1 (если вдруг сумма > 1)
+                const len = Math.sqrt(moveX * moveX + moveY * moveY);
+                if (len > 1) {
+                    moveX /= len;
+                    moveY /= len;
+                }
+                
+                player.x += moveX * player.speed;
+                player.y += moveY * player.speed;
+            }
+            
+            // Границы
+            player.x = Math.max(player.radius, Math.min(WORLD_WIDTH - player.radius, player.x));
+            player.y = Math.max(player.radius, Math.min(WORLD_HEIGHT - player.radius, player.y));
+        }
+        
+        // Обновление врагов (отскок от стен)
+        function updateEnemies() {
+            enemies.forEach(enemy => {
+                enemy.x += enemy.vx;
+                enemy.y += enemy.vy;
+                
+                // Отскок от стен
+                if (enemy.x - enemy.radius < 0) {
+                    enemy.x = enemy.radius;
+                    enemy.vx *= -1;
+                }
+                if (enemy.x + enemy.radius > WORLD_WIDTH) {
+                    enemy.x = WORLD_WIDTH - enemy.radius;
+                    enemy.vx *= -1;
+                }
+                if (enemy.y - enemy.radius < 0) {
+                    enemy.y = enemy.radius;
+                    enemy.vy *= -1;
+                }
+                if (enemy.y + enemy.radius > WORLD_HEIGHT) {
+                    enemy.y = WORLD_HEIGHT - enemy.radius;
+                    enemy.vy *= -1;
+                }
+            });
+        }
+        
+        // Проверка столкновений (игрок и враги) — просто отталкиваем игрока и мигаем
+        function handleCollisions() {
+            enemies.forEach(enemy => {
+                const dx = player.x - enemy.x;
+                const dy = player.y - enemy.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const minDist = player.radius + enemy.radius;
+                
+                if (dist < minDist) {
+                    // Отталкиваем игрока
+                    const angle = Math.atan2(dy, dx);
+                    const overlap = minDist - dist;
+                    player.x += Math.cos(angle) * overlap * 0.5;
+                    player.y += Math.sin(angle) * overlap * 0.5;
+                    
+                    // И врага немного отталкиваем
+                    enemy.x -= Math.cos(angle) * overlap * 0.3;
+                    enemy.y -= Math.sin(angle) * overlap * 0.3;
+                    
+                    // Небольшой эффект: меняем цвет игрока на время (можно вспышку)
+                    player.color = '#ffaaaa';
+                    setTimeout(() => { player.color = '#7aaae0'; }, 100);
+                }
+            });
+        }
+        
+        // Рисование
+        function draw() {
+            ctx.clearRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+            
+            // Фон с сеткой
+            ctx.strokeStyle = '#2e4055';
+            ctx.lineWidth = 1;
+            const step = 40;
+            for (let i = 0; i <= WORLD_WIDTH; i += step) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, WORLD_HEIGHT);
+                ctx.strokeStyle = '#2a3a4e';
+                ctx.stroke();
+            }
+            for (let i = 0; i <= WORLD_HEIGHT; i += step) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(WORLD_WIDTH, i);
+                ctx.strokeStyle = '#2a3a4e';
+                ctx.stroke();
+            }
+            
+            // Враги
+            enemies.forEach(enemy => {
+                // Свечение
+                ctx.shadowColor = enemy.glow;
+                ctx.shadowBlur = 20;
+                ctx.beginPath();
+                ctx.arc(enemy.x, enemy.y, enemy.radius, 0, Math.PI * 2);
+                ctx.fillStyle = enemy.color;
+                ctx.fill();
+                
+                // Внутренний блик
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                ctx.arc(enemy.x - 4, enemy.y - 4, enemy.radius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffcccc';
+                ctx.fill();
+            });
+            
+            // Игрок
+            ctx.shadowColor = player.glow;
+            ctx.shadowBlur = 30;
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
+            ctx.fillStyle = player.color;
+            ctx.fill();
+            
+            // Блик
+            ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.arc(player.x - 5, player.y - 5, player.radius * 0.35, 0, Math.PI * 2);
+            ctx.fillStyle = '#e0f0ff';
+            ctx.fill();
+            
+            // Сброс тени
+            ctx.shadowBlur = 0;
+            ctx.shadowColor = 'transparent';
+            
+            // Индикатор джойстика (маленькая точка, показывающая направление)
+            if (joystickVector.x !== 0 || joystickVector.y !== 0) {
+                ctx.beginPath();
+                ctx.arc(player.x + joystickVector.x * 35, player.y + joystickVector.y * 35, 8, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff80';
+                ctx.fill();
+            }
+        }
+        
+        // Игровой цикл
+        function gameLoop() {
+            updatePlayer();
+            updateEnemies();
+            handleCollisions();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Запуск
+        gameLoop();
+        
+        // При изменении размера окна пересчитываем канвас (для чёткости)
+        window.addEventListener('resize', () => {
+            setupCanvas();
+        });
+        
+        // Предотвращаем скролл на тач-устройствах при касании канваса и джойстика
+        canvas.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
+        canvas.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+    })();
+</script>
+</body>
+</html>
