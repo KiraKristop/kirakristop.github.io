@@ -1,575 +1,746 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Games-site</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            user-select: none;
-        }
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: linear-gradient(145deg, #1a2639 0%, #0d1b2a 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            touch-action: pan-x pan-y; 
-        }
-        .game-wrapper {
-            background: #0f172a;
-            padding: 1.5rem 1.5rem 2rem;
-            border-radius: 3rem;
-            box-shadow: 0 25px 35px rgba(0,0,0,0.8), inset 0 0 10px #2e3b4e;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        canvas {
-            display: block;
-            background: #1e2b3c;
-            border-radius: 2rem;
-            box-shadow: inset 0 0 30px #00000055, 0 10px 20px #00000080;
-            width: 100%;
-            height: auto;
-            max-width: 500px;
-            aspect-ratio: 1 / 1;
-            cursor: crosshair;
-            touch-action: none; /* для канваса отключаем скролл */
-        }
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-top: 1.5rem;
-            padding: 0 0.5rem;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .wasd-hint {
-            display: flex;
-            gap: 0.5rem;
-            background: #1e2b3c;
-            padding: 0.6rem 1rem;
-            border-radius: 3rem;
-            box-shadow: inset 0 5px 0 #0b1119, 0 8px 12px black;
-        }
-        .key {
-            width: 3rem;
-            height: 3rem;
-            background: #2e3f55;
-            border-radius: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.3rem;
-            color: #b0d0ff;
-            box-shadow: 0 6px 0 #0a121c, 0 5px 10px black;
-            transition: all 0.05s;
-            text-shadow: 0 2px 2px black;
-        }
-        .key.pressed {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #0a121c, 0 5px 10px black;
-            background: #3f5a7a;
-            color: white;
-        }
-        /* Джойстик */
-        .joystick-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            touch-action: none;
-        }
-        .joystick-base {
-            width: 130px;
-            height: 130px;
-            background: #1e2b3c;
-            border-radius: 50%;
-            position: relative;
-            box-shadow: inset 0 0 20px #000000, 0 12px 0 #0a121c, 0 15px 20px black;
-            touch-action: none;
-            cursor: pointer;
-        }
-        .joystick-knob {
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle at 30% 30%, #b0d0ff, #4a6c8f);
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 8px 0 #0a121c, 0 10px 15px black;
-            transition: all 0.02s;
-            pointer-events: none;
-            touch-action: none;
-        }
-        .joystick-knob.active {
-            box-shadow: 0 4px 0 #0a121c, 0 10px 15px black;
-        }
-        .footer-note {
-            margin-top: 0.8rem;
-            color: #6b7f99;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-        /* Мобильная адаптация */
-        @media (max-width: 500px) {
-            .game-wrapper {
-                padding: 1rem;
-                border-radius: 2rem;
-            }
-            .key {
-                width: 2.4rem;
-                height: 2.4rem;
-                font-size: 1rem;
-                border-radius: 0.8rem;
-            }
-            .joystick-base {
-                width: 110px;
-                height: 110px;
-            }
-            .joystick-knob {
-                width: 50px;
-                height: 50px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Динозаврик</title>
+<style>
+  * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #f7f7f7;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  body.night { background: #1a1a2e; }
+
+  .game-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 100vh;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 800px;
+    aspect-ratio: 8 / 3;
+    background: #f7f7f7;
+    border-bottom: 3px solid #535353;
+    touch-action: none;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  body.night canvas {
+    background: #1a1a2e;
+    border-bottom-color: #b8b8d0;
+  }
+
+  .ui {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    display: flex;
+    gap: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #535353;
+    letter-spacing: 2px;
+    transition: color 0.3s;
+  }
+  body.night .ui { color: #e0e0ff; }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(247, 247, 247, 0.85);
+    text-align: center;
+    padding: 20px;
+    transition: background 0.3s;
+  }
+  body.night .overlay { background: rgba(26, 26, 46, 0.9); }
+  .overlay.hidden { display: none; }
+
+  .overlay h1 {
+    font-size: clamp(28px, 6vw, 52px);
+    color: #535353;
+    margin: 0 0 10px;
+    letter-spacing: 4px;
+    transition: color 0.3s;
+  }
+  body.night .overlay h1 { color: #e0e0ff; }
+
+  .overlay p {
+    font-size: clamp(14px, 2.5vw, 20px);
+    color: #777;
+    margin: 6px 0;
+    transition: color 0.3s;
+  }
+  body.night .overlay p { color: #a0a0c0; }
+
+  .overlay .hint {
+    margin-top: 20px;
+    font-size: clamp(12px, 2vw, 16px);
+    color: #999;
+    animation: blink 1.2s infinite;
+  }
+  body.night .overlay .hint { color: #7070a0; }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .controls-hint {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 13px;
+    color: #999;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+    pointer-events: none;
+  }
+  body.night .controls-hint { color: #7070a0; }
+</style>
 </head>
 <body>
-<div class="game-wrapper">
-    <canvas id="gameCanvas" width="500" height="500"></canvas>
-    
-    <div class="controls">
-        <!-- WASD подсказка -->
-        <div class="wasd-hint">
-            <div class="key" id="keyW">W</div>
-            <div class="key" id="keyA">A</div>
-            <div class="key" id="keyS">S</div>
-            <div class="key" id="keyD">D</div>
-        </div>
-        
-        <!-- Джойстик -->
-        <div class="joystick-area">
-            <div class="joystick-base" id="joystickBase">
-                <div class="joystick-knob" id="joystickKnob"></div>
-            </div>
-            <div class="footer-note">← джойстик →</div>
-        </div>
-    </div>
-    <div class="footer-note" style="margin-top: 0.2rem;">WASD или джойстик</div>
+
+<div class="game-container">
+  <canvas id="canvas" width="800" height="300"></canvas>
+
+  <div class="ui">
+    <div>HI <span id="hiScore">00000</span></div>
+    <div><span id="score">00000</span></div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <h1>ДИНОЗАВРИК</h1>
+    <p>Прыгай через кактусы и уклоняйся от птеродактилей</p>
+    <p class="hint" id="hintText">Нажми ПРОБЕЛ или коснись экрана</p>
+  </div>
+
+  <div class="controls-hint">ПРОБЕЛ / ↑ / W / ТАП — прыжок &nbsp;•&nbsp; ↓ / S — присесть</div>
 </div>
 
 <script>
-    (function() {
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Размеры игрового мира (логические)
-        const WORLD_WIDTH = 500;
-        const WORLD_HEIGHT = 500;
-        
-        // Настройка канваса с учётом devicePixelRatio для чёткости
-        function setupCanvas() {
-            const dpr = window.devicePixelRatio || 1;
-            const rect = canvas.getBoundingClientRect();
-            // Устанавливаем реальные размеры буфера
-            canvas.width = WORLD_WIDTH * dpr;
-            canvas.height = WORLD_HEIGHT * dpr;
-            // Масштабируем контекст
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        }
-        setupCanvas();
-        
-        // Персонаж
-        const player = {
-            x: WORLD_WIDTH / 2,
-            y: WORLD_HEIGHT / 2,
-            radius: 22,
-            speed: 4.2,
-            color: '#7aaae0',
-            glow: '#aad0ff'
-        };
-        
-        // Враги (простые движущиеся цели)
-        const enemies = [];
-        const ENEMY_COUNT = 5;
-        const ENEMY_RADIUS = 18;
-        const ENEMY_SPEED = 1.6;
-        
-        for (let i = 0; i < ENEMY_COUNT; i++) {
-            enemies.push({
-                x: Math.random() * (WORLD_WIDTH - 2 * ENEMY_RADIUS) + ENEMY_RADIUS,
-                y: Math.random() * (WORLD_HEIGHT - 2 * ENEMY_RADIUS) + ENEMY_RADIUS,
-                vx: (Math.random() - 0.5) * ENEMY_SPEED,
-                vy: (Math.random() - 0.5) * ENEMY_SPEED,
-                radius: ENEMY_RADIUS,
-                color: '#e06b6b',
-                glow: '#ff9e9e'
-            });
-        }
-        
-        // Управление: WASD
-        const keys = {
-            w: false, a: false, s: false, d: false
-        };
-        
-        // Вектор направления от джойстика (нормализованный, значения от -1 до 1)
-        let joystickVector = { x: 0, y: 0 };
-        
-        // DOM элементы
-        const keyW = document.getElementById('keyW');
-        const keyA = document.getElementById('keyA');
-        const keyS = document.getElementById('keyS');
-        const keyD = document.getElementById('keyD');
-        const joystickBase = document.getElementById('joystickBase');
-        const joystickKnob = document.getElementById('joystickKnob');
-        
-        // Обновление визуального состояния клавиш
-        function updateKeyVisual(key, pressed) {
-            const el = key === 'w' ? keyW : key === 'a' ? keyA : key === 's' ? keyS : keyD;
-            if (pressed) {
-                el.classList.add('pressed');
-            } else {
-                el.classList.remove('pressed');
-            }
-        }
-        
-        // Обработчики клавиатуры
-        window.addEventListener('keydown', (e) => {
-            const key = e.key.toLowerCase();
-            if (key === 'w' || key === 'a' || key === 's' || key === 'd') {
-                e.preventDefault(); // чтобы страница не скроллилась
-                if (!keys[key]) {
-                    keys[key] = true;
-                    updateKeyVisual(key, true);
-                }
-            }
+(() => {
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const overlay = document.getElementById('overlay');
+  const hintText = document.getElementById('hintText');
+  const scoreEl = document.getElementById('score');
+  const hiScoreEl = document.getElementById('hiScore');
+
+  const W = 800, H = 300;
+  const GROUND_Y = 250;
+
+  // ==== Настройка DPR ====
+  function setupCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  setupCanvas();
+  window.addEventListener('resize', setupCanvas);
+
+  // ==== Состояние игры ====
+  const STATE = { MENU: 0, PLAYING: 1, GAME_OVER: 2 };
+  let state = STATE.MENU;
+
+  let score = 0;
+  let hiScore = parseInt(localStorage.getItem('dinoHiScore') || '0', 10);
+  hiScoreEl.textContent = String(hiScore).padStart(5, '0');
+
+  let speed = 6;
+  const BASE_SPEED = 6;
+  const MAX_SPEED = 15;
+  let frame = 0;
+
+  // ==== Динозавр ====
+  const dino = {
+    x: 60,
+    y: GROUND_Y,
+    w: 44,
+    h: 48,
+    vy: 0,
+    gravity: 0.9,
+    jumpPower: -15,
+    onGround: true,
+    ducking: false,
+    legFrame: 0,
+    legTimer: 0,
+    blinkTimer: 0,
+    blinking: false,
+    dead: false
+  };
+
+  // ==== Объекты ====
+  let obstacles = [];
+  let clouds = [];
+  let groundDecor = [];
+  let birds = [];
+  let particles = [];
+
+  // ==== Цикл дня/ночи ====
+  let nightMode = false;
+  let nightTimer = 0;
+
+  // ==== Частицы пыли ====
+  function spawnDust(x, y) {
+    for (let i = 0; i < 3; i++) {
+      particles.push({
+        x, y,
+        vx: -Math.random() * 2 - 1,
+        vy: -Math.random() * 1.5,
+        life: 20,
+        maxLife: 20,
+        size: Math.random() * 2 + 1
+      });
+    }
+  }
+
+  // ==== Сброс игры ====
+  function resetGame() {
+    score = 0;
+    speed = BASE_SPEED;
+    frame = 0;
+    obstacles = [];
+    birds = [];
+    particles = [];
+    clouds = [];
+    groundDecor = [];
+    dino.y = GROUND_Y;
+    dino.vy = 0;
+    dino.onGround = true;
+    dino.ducking = false;
+    dino.dead = false;
+    nightMode = false;
+    nightTimer = 0;
+    document.body.classList.remove('night');
+    initClouds();
+    initGroundDecor();
+  }
+
+  function initClouds() {
+    clouds = [];
+    for (let i = 0; i < 4; i++) {
+      clouds.push({
+        x: Math.random() * W,
+        y: 30 + Math.random() * 80,
+        size: 30 + Math.random() * 20,
+        speed: 0.3 + Math.random() * 0.4
+      });
+    }
+  }
+
+  function initGroundDecor() {
+    groundDecor = [];
+    for (let i = 0; i < 20; i++) {
+      groundDecor.push({
+        x: Math.random() * W,
+        y: GROUND_Y + 5 + Math.random() * 15,
+        w: 2 + Math.random() * 8,
+        h: 1 + Math.random() * 3
+      });
+    }
+  }
+
+  // ==== Спавн препятствий ====
+  function spawnObstacle() {
+    const r = Math.random();
+    if (r < 0.7) {
+      // Кактус
+      const small = Math.random() < 0.6;
+      const cactiCount = Math.random() < 0.4 ? 2 + Math.floor(Math.random() * 2) : 1;
+      const baseW = small ? 17 : 25;
+      const baseH = small ? 35 : 50;
+      for (let i = 0; i < cactiCount; i++) {
+        obstacles.push({
+          x: W + i * (baseW + 4),
+          y: GROUND_Y - baseH + 8,
+          w: baseW,
+          h: baseH,
+          type: 'cactus',
+          small: small
         });
-        
-        window.addEventListener('keyup', (e) => {
-            const key = e.key.toLowerCase();
-            if (key === 'w' || key === 'a' || key === 's' || key === 'd') {
-                e.preventDefault();
-                if (keys[key]) {
-                    keys[key] = false;
-                    updateKeyVisual(key, false);
-                }
-            }
-        });
-        
-        // Сброс клавиш при потере фокуса
-        window.addEventListener('blur', () => {
-            ['w', 'a', 's', 'd'].forEach(k => {
-                if (keys[k]) {
-                    keys[k] = false;
-                    updateKeyVisual(k, false);
-                }
-            });
-        });
-        
-        // ========== ДЖОЙСТИК ==========
-        let joystickActive = false;
-        const maxDistance = 42; // максимальное смещение ручки от центра (для базы 130px / 2 - 30 ≈ 35, но с запасом)
-        
-        // Получить координаты центра базы джойстика относительно окна
-        function getBaseCenter() {
-            const rect = joystickBase.getBoundingClientRect();
-            return {
-                x: rect.left + rect.width / 2,
-                y: rect.top + rect.height / 2
-            };
-        }
-        
-        // Обновить положение ручки и вектор джойстика
-        function updateJoystick(clientX, clientY) {
-            const center = getBaseCenter();
-            let dx = clientX - center.x;
-            let dy = clientY - center.y;
-            
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            // Ограничиваем смещение
-            if (distance > maxDistance) {
-                dx = (dx / distance) * maxDistance;
-                dy = (dy / distance) * maxDistance;
-            }
-            
-            // Смещаем ручку
-            joystickKnob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-            
-            // Вектор направления (нормализованный)
-            const normX = dx / maxDistance;
-            const normY = dy / maxDistance;
-            joystickVector.x = Math.abs(normX) > 0.1 ? normX : 0;
-            joystickVector.y = Math.abs(normY) > 0.1 ? normY : 0;
-            
-            // Небольшая корректировка для плавности: можно оставить как есть
-            // Если вектор слишком мал — обнуляем
-            if (Math.abs(joystickVector.x) < 0.05) joystickVector.x = 0;
-            if (Math.abs(joystickVector.y) < 0.05) joystickVector.y = 0;
-        }
-        
-        // Сброс джойстика в центр
-        function resetJoystick() {
-            joystickActive = false;
-            joystickKnob.style.transform = `translate(-50%, -50%)`;
-            joystickVector.x = 0;
-            joystickVector.y = 0;
-            joystickKnob.classList.remove('active');
-        }
-        
-        // Обработчики для джойстика (мышь и тач)
-        function onJoystickStart(e) {
-            e.preventDefault();
-            joystickActive = true;
-            joystickKnob.classList.add('active');
-            
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            updateJoystick(clientX, clientY);
-            
-            // Добавляем слушатели на движение и отпускание
-            if (e.touches) {
-                window.addEventListener('touchmove', onJoystickMove, { passive: false });
-                window.addEventListener('touchend', onJoystickEnd);
-                window.addEventListener('touchcancel', onJoystickEnd);
-            } else {
-                window.addEventListener('mousemove', onJoystickMove);
-                window.addEventListener('mouseup', onJoystickEnd);
-            }
-        }
-        
-        function onJoystickMove(e) {
-            if (!joystickActive) return;
-            e.preventDefault();
-            
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            updateJoystick(clientX, clientY);
-        }
-        
-        function onJoystickEnd(e) {
-            if (!joystickActive) return;
-            e.preventDefault();
-            
-            // Удаляем слушатели
-            if (e.touches) {
-                window.removeEventListener('touchmove', onJoystickMove);
-                window.removeEventListener('touchend', onJoystickEnd);
-                window.removeEventListener('touchcancel', onJoystickEnd);
-            } else {
-                window.removeEventListener('mousemove', onJoystickMove);
-                window.removeEventListener('mouseup', onJoystickEnd);
-            }
-            
-            resetJoystick();
-        }
-        
-        // Навешиваем обработчики на базу джойстика
-        joystickBase.addEventListener('mousedown', onJoystickStart);
-        joystickBase.addEventListener('touchstart', onJoystickStart, { passive: false });
-        
-        // Предотвращаем контекстное меню на джойстике
-        joystickBase.addEventListener('contextmenu', (e) => e.preventDefault());
-        
-        // ========== ИГРОВОЙ ЦИКЛ ==========
-        
-        // Обновление позиции игрока с учётом WASD и джойстика
-        function updatePlayer() {
-            let moveX = 0;
-            let moveY = 0;
-            
-            // WASD
-            if (keys.w) moveY -= 1;
-            if (keys.s) moveY += 1;
-            if (keys.a) moveX -= 1;
-            if (keys.d) moveX += 1;
-            
-            // Нормализация диагонали для WASD
-            if (moveX !== 0 && moveY !== 0) {
-                const length = Math.sqrt(moveX * moveX + moveY * moveY);
-                moveX /= length;
-                moveY /= length;
-            }
-            
-            // Джойстик (имеет приоритет, если активен и вектор не нулевой)
-            if (joystickVector.x !== 0 || joystickVector.y !== 0) {
-                moveX = joystickVector.x;
-                moveY = joystickVector.y;
-                // Уже нормализован (в пределах -1..1)
-            }
-            
-            // Применяем движение
-            if (moveX !== 0 || moveY !== 0) {
-                // Ограничиваем длину вектора до 1 (если вдруг сумма > 1)
-                const len = Math.sqrt(moveX * moveX + moveY * moveY);
-                if (len > 1) {
-                    moveX /= len;
-                    moveY /= len;
-                }
-                
-                player.x += moveX * player.speed;
-                player.y += moveY * player.speed;
-            }
-            
-            // Границы
-            player.x = Math.max(player.radius, Math.min(WORLD_WIDTH - player.radius, player.x));
-            player.y = Math.max(player.radius, Math.min(WORLD_HEIGHT - player.radius, player.y));
-        }
-        
-        // Обновление врагов (отскок от стен)
-        function updateEnemies() {
-            enemies.forEach(enemy => {
-                enemy.x += enemy.vx;
-                enemy.y += enemy.vy;
-                
-                // Отскок от стен
-                if (enemy.x - enemy.radius < 0) {
-                    enemy.x = enemy.radius;
-                    enemy.vx *= -1;
-                }
-                if (enemy.x + enemy.radius > WORLD_WIDTH) {
-                    enemy.x = WORLD_WIDTH - enemy.radius;
-                    enemy.vx *= -1;
-                }
-                if (enemy.y - enemy.radius < 0) {
-                    enemy.y = enemy.radius;
-                    enemy.vy *= -1;
-                }
-                if (enemy.y + enemy.radius > WORLD_HEIGHT) {
-                    enemy.y = WORLD_HEIGHT - enemy.radius;
-                    enemy.vy *= -1;
-                }
-            });
-        }
-        
-        // Проверка столкновений (игрок и враги) — просто отталкиваем игрока и мигаем
-        function handleCollisions() {
-            enemies.forEach(enemy => {
-                const dx = player.x - enemy.x;
-                const dy = player.y - enemy.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                const minDist = player.radius + enemy.radius;
-                
-                if (dist < minDist) {
-                    // Отталкиваем игрока
-                    const angle = Math.atan2(dy, dx);
-                    const overlap = minDist - dist;
-                    player.x += Math.cos(angle) * overlap * 0.5;
-                    player.y += Math.sin(angle) * overlap * 0.5;
-                    
-                    // И врага немного отталкиваем
-                    enemy.x -= Math.cos(angle) * overlap * 0.3;
-                    enemy.y -= Math.sin(angle) * overlap * 0.3;
-                    
-                    // Небольшой эффект: меняем цвет игрока на время (можно вспышку)
-                    player.color = '#ffaaaa';
-                    setTimeout(() => { player.color = '#7aaae0'; }, 100);
-                }
-            });
-        }
-        
-        // Рисование
-        function draw() {
-            ctx.clearRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
-            
-            // Фон с сеткой
-            ctx.strokeStyle = '#2e4055';
-            ctx.lineWidth = 1;
-            const step = 40;
-            for (let i = 0; i <= WORLD_WIDTH; i += step) {
-                ctx.beginPath();
-                ctx.moveTo(i, 0);
-                ctx.lineTo(i, WORLD_HEIGHT);
-                ctx.strokeStyle = '#2a3a4e';
-                ctx.stroke();
-            }
-            for (let i = 0; i <= WORLD_HEIGHT; i += step) {
-                ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.lineTo(WORLD_WIDTH, i);
-                ctx.strokeStyle = '#2a3a4e';
-                ctx.stroke();
-            }
-            
-            // Враги
-            enemies.forEach(enemy => {
-                // Свечение
-                ctx.shadowColor = enemy.glow;
-                ctx.shadowBlur = 20;
-                ctx.beginPath();
-                ctx.arc(enemy.x, enemy.y, enemy.radius, 0, Math.PI * 2);
-                ctx.fillStyle = enemy.color;
-                ctx.fill();
-                
-                // Внутренний блик
-                ctx.shadowBlur = 8;
-                ctx.beginPath();
-                ctx.arc(enemy.x - 4, enemy.y - 4, enemy.radius * 0.3, 0, Math.PI * 2);
-                ctx.fillStyle = '#ffcccc';
-                ctx.fill();
-            });
-            
-            // Игрок
-            ctx.shadowColor = player.glow;
-            ctx.shadowBlur = 30;
-            ctx.beginPath();
-            ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-            ctx.fillStyle = player.color;
-            ctx.fill();
-            
-            // Блик
-            ctx.shadowBlur = 12;
-            ctx.beginPath();
-            ctx.arc(player.x - 5, player.y - 5, player.radius * 0.35, 0, Math.PI * 2);
-            ctx.fillStyle = '#e0f0ff';
-            ctx.fill();
-            
-            // Сброс тени
-            ctx.shadowBlur = 0;
-            ctx.shadowColor = 'transparent';
-            
-            // Индикатор джойстика (маленькая точка, показывающая направление)
-            if (joystickVector.x !== 0 || joystickVector.y !== 0) {
-                ctx.beginPath();
-                ctx.arc(player.x + joystickVector.x * 35, player.y + joystickVector.y * 35, 8, 0, Math.PI * 2);
-                ctx.fillStyle = '#ffffff80';
-                ctx.fill();
-            }
-        }
-        
-        // Игровой цикл
-        function gameLoop() {
-            updatePlayer();
-            updateEnemies();
-            handleCollisions();
-            draw();
-            requestAnimationFrame(gameLoop);
-        }
-        
-        // Запуск
-        gameLoop();
-        
-        // При изменении размера окна пересчитываем канвас (для чёткости)
-        window.addEventListener('resize', () => {
-            setupCanvas();
-        });
-        
-        // Предотвращаем скролл на тач-устройствах при касании канваса и джойстика
-        canvas.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
-        canvas.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
-    })();
+      }
+    } else {
+      // Птеродактиль
+      const heights = [GROUND_Y - 50, GROUND_Y - 85, GROUND_Y - 115];
+      birds.push({
+        x: W + 20,
+        y: heights[Math.floor(Math.random() * heights.length)],
+        w: 42,
+        h: 30,
+        frame: 0,
+        frameTimer: 0
+      });
+    }
+  }
+
+  // ==== Прыжок ====
+  function jump() {
+    if (state === STATE.MENU) {
+      startGame();
+      return;
+    }
+    if (state === STATE.GAME_OVER) {
+      if (frame > 30) startGame();
+      return;
+    }
+    if (state === STATE.PLAYING && dino.onGround && !dino.dead) {
+      dino.vy = dino.jumpPower;
+      dino.onGround = false;
+      dino.ducking = false;
+      spawnDust(dino.x + dino.w / 2, GROUND_Y);
+    }
+  }
+
+  function startGame() {
+    resetGame();
+    state = STATE.PLAYING;
+    overlay.classList.add('hidden');
+  }
+
+  function gameOver() {
+    state = STATE.GAME_OVER;
+    frame = 0;
+    dino.dead = true;
+    if (score > hiScore) {
+      hiScore = score;
+      localStorage.setItem('dinoHiScore', hiScore);
+      hiScoreEl.textContent = String(hiScore).padStart(5, '0');
+    }
+    overlay.classList.remove('hidden');
+    document.querySelector('.overlay h1').textContent = 'ИГРА ОКОНЧЕНА';
+    document.querySelector('.overlay p').textContent = 'Счёт: ' + score;
+    hintText.textContent = 'Нажми ПРОБЕЛ или коснись экрана';
+  }
+
+  function toMenu() {
+    state = STATE.MENU;
+    resetGame();
+    overlay.classList.remove('hidden');
+    document.querySelector('.overlay h1').textContent = 'ДИНОЗАВРИК';
+    document.querySelector('.overlay p').textContent = 'Прыгай через кактусы и уклоняйся от птеродактилей';
+    hintText.textContent = 'Нажми ПРОБЕЛ или коснись экрана';
+  }
+
+  // ==== Управление ====
+  const keys = { jump: false, duck: false };
+
+  window.addEventListener('keydown', (e) => {
+    const k = e.key.toLowerCase();
+    if (k === ' ' || k === 'arrowup' || k === 'w' || e.code === 'Space') {
+      e.preventDefault();
+      if (!keys.jump) { keys.jump = true; jump(); }
+    }
+    if (k === 'arrowdown' || k === 's') {
+      e.preventDefault();
+      keys.duck = true;
+      if (state === STATE.PLAYING) dino.ducking = true;
+    }
+  });
+
+  window.addEventListener('keyup', (e) => {
+    const k = e.key.toLowerCase();
+    if (k === ' ' || k === 'arrowup' || k === 'w' || e.code === 'Space') keys.jump = false;
+    if (k === 'arrowdown' || k === 's') {
+      keys.duck = false;
+      dino.ducking = false;
+    }
+  });
+
+  // Тач и мышь
+  function handlePointer(e) {
+    e.preventDefault();
+    if (state === STATE.PLAYING) {
+      jump();
+    } else if (state === STATE.MENU || state === STATE.GAME_OVER) {
+      jump();
+    }
+  }
+
+  canvas.addEventListener('touchstart', handlePointer, { passive: false });
+  canvas.addEventListener('mousedown', handlePointer);
+  overlay.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); }, { passive: false });
+  overlay.addEventListener('mousedown', (e) => { e.preventDefault(); jump(); });
+
+  // ==== Обновление ====
+  function update() {
+    frame++;
+
+    if (state !== STATE.PLAYING) {
+      // Двигаем облака в меню/проигрыше
+      clouds.forEach(c => {
+        c.x -= c.speed * 0.5;
+        if (c.x + c.size < 0) { c.x = W + c.size; c.y = 30 + Math.random() * 80; }
+      });
+      // Обновляем анимацию ног при смерти
+      if (state === STATE.GAME_OVER) {
+        dino.legTimer++;
+        if (dino.legTimer > 6) { dino.legTimer = 0; dino.legFrame = (dino.legFrame + 1) % 2; }
+      }
+      return;
+    }
+
+    // Ускорение
+    if (speed < MAX_SPEED) speed += 0.0012;
+    score = Math.floor(frame / 6);
+
+    // Динозавр физика
+    if (!dino.onGround) {
+      dino.vy += dino.gravity;
+      dino.y += dino.vy;
+      if (dino.y >= GROUND_Y) {
+        dino.y = GROUND_Y;
+        dino.vy = 0;
+        dino.onGround = true;
+        spawnDust(dino.x + dino.w / 2, GROUND_Y);
+      }
+    }
+
+    // Приседание меняет высоту хитбокса
+    const currentH = dino.ducking && dino.onGround ? dino.h * 0.6 : dino.h;
+    const currentY = GROUND_Y - currentH;
+
+    // Анимация ног
+    dino.legTimer++;
+    if (dino.legTimer > Math.max(3, 8 - Math.floor(speed / 2))) {
+      dino.legTimer = 0;
+      dino.legFrame = (dino.legFrame + 1) % 2;
+    }
+
+    // Моргание
+    dino.blinkTimer++;
+    if (dino.blinkTimer > 100) {
+      dino.blinking = !dino.blinking;
+      dino.blinkTimer = 0;
+    }
+
+    // Спавн препятствий
+    const spawnRate = Math.max(50, 100 - speed * 3);
+    if (frame % Math.floor(spawnRate) === 0 && frame > 40) {
+      spawnObstacle();
+    }
+
+    // Обновление кактусов
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+      const o = obstacles[i];
+      o.x -= speed;
+      if (o.x + o.w < 0) {
+        obstacles.splice(i, 1);
+        continue;
+      }
+      // Коллизия
+      if (rectCollide(
+        dino.x + 8, currentY + 4, dino.w - 16, currentH - 8,
+        o.x + 3, o.y + 3, o.w - 6, o.h - 6
+      )) {
+        gameOver();
+        return;
+      }
+    }
+
+    // Обновление птиц
+    for (let i = birds.length - 1; i >= 0; i--) {
+      const b = birds[i];
+      b.x -= speed + 1.2;
+      b.frameTimer++;
+      if (b.frameTimer > 8) { b.frameTimer = 0; b.frame = (b.frame + 1) % 2; }
+      if (b.x + b.w < 0) {
+        birds.splice(i, 1);
+        continue;
+      }
+      if (rectCollide(
+        dino.x + 8, currentY + 4, dino.w - 16, currentH - 8,
+        b.x + 8, b.y + 8, b.w - 16, b.h - 16
+      )) {
+        gameOver();
+        return;
+      }
+    }
+
+    // Облака
+    clouds.forEach(c => {
+      c.x -= c.speed + speed * 0.05;
+      if (c.x + c.size < 0) { c.x = W + c.size; c.y = 30 + Math.random() * 80; }
+    });
+
+    // Земля
+    groundDecor.forEach(g => {
+      g.x -= speed;
+      if (g.x + g.w < 0) {
+        g.x = W + Math.random() * 100;
+        g.y = GROUND_Y + 5 + Math.random() * 15;
+      }
+    });
+
+    // Частицы
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.1;
+      p.life--;
+      if (p.life <= 0) particles.splice(i, 1);
+    }
+
+    // Смена дня/ночи каждые 700 очков
+    nightTimer++;
+    if (score > 0 && score % 700 === 0 && nightTimer > 60) {
+      nightMode = !nightMode;
+      document.body.classList.toggle('night', nightMode);
+      nightTimer = 0;
+    }
+
+    // Очки
+    scoreEl.textContent = String(score).padStart(5, '0');
+
+    // Обновление скорости
+    if (speed >= MAX_SPEED) speed = MAX_SPEED;
+  }
+
+  function rectCollide(x1, y1, w1, h1, x2, y2, w2, h2) {
+    return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
+  }
+
+  // ==== Рисование ====
+  const FG = '#535353';
+  const BG_NIGHT = '#b8b8d0';
+
+  function getColor() { return nightMode ? BG_NIGHT : FG; }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    const c = getColor();
+
+    // Земля
+    ctx.strokeStyle = c;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, GROUND_Y + 2);
+    ctx.lineTo(W, GROUND_Y + 2);
+    ctx.stroke();
+
+    // Декор земли (точки/чёрточки)
+    ctx.fillStyle = c;
+    groundDecor.forEach(g => {
+      ctx.fillRect(g.x, g.y, g.w, g.h);
+    });
+
+    // Облака
+    ctx.strokeStyle = c;
+    ctx.lineWidth = 2;
+    clouds.forEach(cl => {
+      ctx.beginPath();
+      // Простое облако из дуг
+      ctx.arc(cl.x, cl.y, cl.size * 0.5, Math.PI, 0);
+      ctx.arc(cl.x + cl.size * 0.6, cl.y - cl.size * 0.15, cl.size * 0.4, Math.PI, 0);
+      ctx.arc(cl.x - cl.size * 0.6, cl.y - cl.size * 0.1, cl.size * 0.35, Math.PI, 0);
+      ctx.stroke();
+    });
+
+    // Кактусы
+    ctx.fillStyle = c;
+    obstacles.forEach(o => {
+      drawCactus(o.x, o.y, o.w, o.h, o.small);
+    });
+
+    // Птеродактили
+    birds.forEach(b => {
+      drawBird(b.x, b.y, b.w, b.h, b.frame);
+    });
+
+    // Частицы пыли
+    ctx.fillStyle = nightMode ? '#7a7aa0' : '#aaa';
+    particles.forEach(p => {
+      ctx.globalAlpha = p.life / p.maxLife;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+    });
+    ctx.globalAlpha = 1;
+
+    // Динозавр
+    drawDino();
+
+    // Обновление оверлея при game over
+    if (state === STATE.GAME_OVER) {
+      // пусто
+    }
+  }
+
+  function drawCactus(x, y, w, h, small) {
+    const c = getColor();
+    ctx.fillStyle = c;
+
+    if (small) {
+      // Маленький кактус
+      ctx.fillRect(x + w * 0.35, y, w * 0.3, h);
+      ctx.fillRect(x, y + h * 0.3, w * 0.3, h * 0.25);
+      ctx.fillRect(x + w * 0.7, y + h * 0.2, w * 0.3, h * 0.3);
+    } else {
+      // Большой кактус
+      ctx.fillRect(x + w * 0.35, y, w * 0.3, h);
+      ctx.fillRect(x, y + h * 0.25, w * 0.35, h * 0.3);
+      ctx.fillRect(x + w * 0.65, y + h * 0.35, w * 0.35, h * 0.25);
+    }
+  }
+
+  function drawBird(x, y, w, h, frame) {
+    const c = getColor();
+    ctx.fillStyle = c;
+    ctx.strokeStyle = c;
+    ctx.lineWidth = 2;
+
+    // Тело
+    ctx.beginPath();
+    ctx.ellipse(x + w / 2, y + h / 2, w * 0.3, h * 0.25, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Голова
+    ctx.beginPath();
+    ctx.arc(x + w * 0.75, y + h * 0.4, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Клюв
+    ctx.beginPath();
+    ctx.moveTo(x + w * 0.8, y + h * 0.35);
+    ctx.lineTo(x + w * 0.95, y + h * 0.42);
+    ctx.lineTo(x + w * 0.8, y + h * 0.48);
+    ctx.fill();
+
+    // Крылья (взмах)
+    ctx.beginPath();
+    if (frame === 0) {
+      // Крылья вверх
+      ctx.moveTo(x + w * 0.4, y + h * 0.5);
+      ctx.lineTo(x + w * 0.5, y - 5);
+      ctx.lineTo(x + w * 0.65, y + h * 0.5);
+    } else {
+      // Крылья вниз
+      ctx.moveTo(x + w * 0.4, y + h * 0.5);
+      ctx.lineTo(x + w * 0.5, y + h + 5);
+      ctx.lineTo(x + w * 0.65, y + h * 0.5);
+    }
+    ctx.fill();
+
+    // Хвост
+    ctx.beginPath();
+    ctx.moveTo(x + w * 0.15, y + h * 0.4);
+    ctx.lineTo(x - 5, y + h * 0.3);
+    ctx.lineTo(x + w * 0.15, y + h * 0.6);
+    ctx.fill();
+  }
+
+  function drawDino() {
+    const c = getColor();
+    ctx.fillStyle = c;
+
+    const ducking = dino.ducking && dino.onGround && !dino.dead;
+    const w = ducking ? dino.w * 1.3 : dino.w;
+    const h = ducking ? dino.h * 0.6 : dino.h;
+    const x = dino.x;
+    const y = GROUND_Y - h;
+
+    if (dino.dead) {
+      // Мёртвый динозавр — глаза X
+      ctx.fillRect(x + 8, y + 8, w - 16, h - 16);
+
+      // Глаз с крестиком
+      ctx.strokeStyle = nightMode ? '#1a1a2e' : '#f7f7f7';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x + w * 0.6, y + 12);
+      ctx.lineTo(x + w * 0.75, y + 22);
+      ctx.moveTo(x + w * 0.75, y + 12);
+      ctx.lineTo(x + w * 0.6, y + 22);
+      ctx.stroke();
+
+      // Ноги (стоят)
+      ctx.fillStyle = c;
+      ctx.fillRect(x + 6, GROUND_Y - 6, 8, 6);
+      ctx.fillRect(x + 22, GROUND_Y - 6, 8, 6);
+      return;
+    }
+
+    // Хвост
+    ctx.fillRect(x - 8, y + h * 0.3, 12, 6);
+
+    // Тело
+    ctx.fillRect(x, y, w, h - 8);
+
+    // Голова
+    ctx.fillRect(x + w - 5, y - 4, 18, 18);
+
+    // Глаз
+    if (!dino.blinking) {
+      ctx.fillStyle = nightMode ? '#1a1a2e' : '#f7f7f7';
+      ctx.fillRect(x + w + 4, y + 2, 5, 5);
+      ctx.fillStyle = c;
+    }
+
+    // Рот
+    ctx.fillRect(x + w + 8, y + 12, 8, 2);
+
+    // Ноги
+    if (!dino.onGround || dino.dead) {
+      // В прыжке — обе вытянуты
+      ctx.fillRect(x + 8, y + h - 8, 7, 8);
+      ctx.fillRect(x + w - 16, y + h - 8, 7, 8);
+    } else if (dino.ducking) {
+      // Приседая — ноги короткие
+      ctx.fillRect(x + 8, GROUND_Y - 5, 7, 5);
+      ctx.fillRect(x + w - 16, GROUND_Y - 5, 7, 5);
+    } else {
+      // Бег
+      if (dino.legFrame === 0) {
+        ctx.fillRect(x + 8, y + h - 8, 7, 8);
+        ctx.fillRect(x + w - 16, y + h - 4, 7, 4);
+      } else {
+        ctx.fillRect(x + 8, y + h - 4, 7, 4);
+        ctx.fillRect(x + w - 16, y + h - 8, 7, 8);
+      }
+    }
+
+    // Маленькая ручка
+    ctx.fillRect(x + w - 10, y + h * 0.5, 8, 4);
+  }
+
+  // ==== Главный цикл ====
+  function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  // ==== Инициализация ====
+  resetGame();
+  loop();
+
+  // Начальное состояние — меню
+  overlay.classList.remove('hidden');
+
+})();
 </script>
 </body>
 </html>
