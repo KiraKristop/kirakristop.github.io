@@ -58,6 +58,7 @@
     color: #535353;
     letter-spacing: 2px;
     transition: color 0.3s;
+    z-index: 2;
   }
   body.night .ui { color: #e0e0ff; }
 
@@ -72,6 +73,7 @@
     text-align: center;
     padding: 20px;
     transition: background 0.3s;
+    z-index: 3;
   }
   body.night .overlay { background: rgba(26, 26, 46, 0.9); }
   .overlay.hidden { display: none; }
@@ -117,8 +119,42 @@
     letter-spacing: 1px;
     transition: color 0.3s;
     pointer-events: none;
+    z-index: 2;
   }
   body.night .controls-hint { color: #7070a0; }
+
+  /* Большая кнопка прыжка для мобильных */
+  .jump-btn {
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(83, 83, 83, 0.15);
+    border: 2px solid rgba(83, 83, 83, 0.4);
+    color: #535353;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 4;
+    transition: all 0.1s;
+    touch-action: none;
+  }
+  .jump-btn:active {
+    background: rgba(83, 83, 83, 0.35);
+    transform: scale(0.92);
+  }
+  body.night .jump-btn {
+    background: rgba(184, 184, 208, 0.15);
+    border-color: rgba(184, 184, 208, 0.4);
+    color: #b8b8d0;
+  }
+  @media (min-width: 700px) {
+    .jump-btn { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -137,6 +173,8 @@
     <p class="hint" id="hintText">Нажми ПРОБЕЛ или коснись экрана</p>
   </div>
 
+  <div class="jump-btn" id="jumpBtn">▲</div>
+
   <div class="controls-hint">ПРОБЕЛ / ↑ / W / ТАП — прыжок &nbsp;•&nbsp; ↓ / S — присесть</div>
 </div>
 
@@ -148,11 +186,11 @@
   const hintText = document.getElementById('hintText');
   const scoreEl = document.getElementById('score');
   const hiScoreEl = document.getElementById('hiScore');
+  const jumpBtn = document.getElementById('jumpBtn');
 
   const W = 800, H = 300;
   const GROUND_Y = 250;
 
-  // ==== Настройка DPR ====
   function setupCanvas() {
     const dpr = window.devicePixelRatio || 1;
     canvas.width = W * dpr;
@@ -162,7 +200,6 @@
   setupCanvas();
   window.addEventListener('resize', setupCanvas);
 
-  // ==== Состояние игры ====
   const STATE = { MENU: 0, PLAYING: 1, GAME_OVER: 2 };
   let state = STATE.MENU;
 
@@ -175,7 +212,6 @@
   const MAX_SPEED = 15;
   let frame = 0;
 
-  // ==== Динозавр ====
   const dino = {
     x: 60,
     y: GROUND_Y,
@@ -193,32 +229,27 @@
     dead: false
   };
 
-  // ==== Объекты ====
   let obstacles = [];
   let clouds = [];
   let groundDecor = [];
   let birds = [];
   let particles = [];
-
-  // ==== Цикл дня/ночи ====
   let nightMode = false;
   let nightTimer = 0;
 
-  // ==== Частицы пыли ====
+  // ==== Пыль ====
   function spawnDust(x, y) {
     for (let i = 0; i < 3; i++) {
       particles.push({
         x, y,
         vx: -Math.random() * 2 - 1,
         vy: -Math.random() * 1.5,
-        life: 20,
-        maxLife: 20,
+        life: 20, maxLife: 20,
         size: Math.random() * 2 + 1
       });
     }
   }
 
-  // ==== Сброс игры ====
   function resetGame() {
     score = 0;
     speed = BASE_SPEED;
@@ -264,11 +295,9 @@
     }
   }
 
-  // ==== Спавн препятствий ====
   function spawnObstacle() {
     const r = Math.random();
     if (r < 0.7) {
-      // Кактус
       const small = Math.random() < 0.6;
       const cactiCount = Math.random() < 0.4 ? 2 + Math.floor(Math.random() * 2) : 1;
       const baseW = small ? 17 : 25;
@@ -277,34 +306,29 @@
         obstacles.push({
           x: W + i * (baseW + 4),
           y: GROUND_Y - baseH + 8,
-          w: baseW,
-          h: baseH,
-          type: 'cactus',
-          small: small
+          w: baseW, h: baseH,
+          type: 'cactus', small
         });
       }
     } else {
-      // Птеродактиль
       const heights = [GROUND_Y - 50, GROUND_Y - 85, GROUND_Y - 115];
       birds.push({
         x: W + 20,
         y: heights[Math.floor(Math.random() * heights.length)],
-        w: 42,
-        h: 30,
-        frame: 0,
-        frameTimer: 0
+        w: 42, h: 30,
+        frame: 0, frameTimer: 0
       });
     }
   }
 
-  // ==== Прыжок ====
+  // ==== ГЛАВНАЯ ФУНКЦИЯ ПРЫЖКА ====
   function jump() {
     if (state === STATE.MENU) {
       startGame();
       return;
     }
     if (state === STATE.GAME_OVER) {
-      if (frame > 30) startGame();
+      if (frame > 25) startGame();
       return;
     }
     if (state === STATE.PLAYING && dino.onGround && !dino.dead) {
@@ -336,66 +360,80 @@
     hintText.textContent = 'Нажми ПРОБЕЛ или коснись экрана';
   }
 
-  function toMenu() {
-    state = STATE.MENU;
-    resetGame();
-    overlay.classList.remove('hidden');
-    document.querySelector('.overlay h1').textContent = 'ДИНОЗАВРИК';
-    document.querySelector('.overlay p').textContent = 'Прыгай через кактусы и уклоняйся от птеродактилей';
-    hintText.textContent = 'Нажми ПРОБЕЛ или коснись экрана';
-  }
+  // ==== УПРАВЛЕНИЕ ====
+  const keys = { duck: false };
 
-  // ==== Управление ====
-  const keys = { jump: false, duck: false };
-
-  window.addEventListener('keydown', (e) => {
+  // --- КЛАВИАТУРА ---
+  document.addEventListener('keydown', (e) => {
     const k = e.key.toLowerCase();
-    if (k === ' ' || k === 'arrowup' || k === 'w' || e.code === 'Space') {
+    const code = e.code;
+
+    // Прыжок
+    if (code === 'Space' || k === ' ' || k === 'arrowup' || k === 'w' || code === 'KeyW' || code === 'ArrowUp') {
       e.preventDefault();
-      if (!keys.jump) { keys.jump = true; jump(); }
+      jump();
+      return;
     }
-    if (k === 'arrowdown' || k === 's') {
+    // Приседание
+    if (k === 'arrowdown' || k === 's' || code === 'KeyS' || code === 'ArrowDown') {
       e.preventDefault();
       keys.duck = true;
       if (state === STATE.PLAYING) dino.ducking = true;
     }
   });
 
-  window.addEventListener('keyup', (e) => {
+  document.addEventListener('keyup', (e) => {
     const k = e.key.toLowerCase();
-    if (k === ' ' || k === 'arrowup' || k === 'w' || e.code === 'Space') keys.jump = false;
-    if (k === 'arrowdown' || k === 's') {
+    const code = e.code;
+    if (k === 'arrowdown' || k === 's' || code === 'KeyS' || code === 'ArrowDown') {
       keys.duck = false;
       dino.ducking = false;
     }
   });
 
-  // Тач и мышь
-  function handlePointer(e) {
+  // --- ТАЧ / МЫШЬ на канвасе ---
+  let pointerDown = false;
+
+  function onPointerDown(e) {
     e.preventDefault();
-    if (state === STATE.PLAYING) {
-      jump();
-    } else if (state === STATE.MENU || state === STATE.GAME_OVER) {
-      jump();
-    }
+    pointerDown = true;
+    jump();
   }
 
-  canvas.addEventListener('touchstart', handlePointer, { passive: false });
-  canvas.addEventListener('mousedown', handlePointer);
+  function onPointerUp(e) {
+    pointerDown = false;
+  }
+
+  canvas.addEventListener('touchstart', onPointerDown, { passive: false });
+  canvas.addEventListener('mousedown', onPointerDown);
+  canvas.addEventListener('touchend', onPointerUp);
+  canvas.addEventListener('mouseup', onPointerUp);
+  canvas.addEventListener('touchcancel', onPointerUp);
+
+  // --- Оверлей ---
   overlay.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); }, { passive: false });
   overlay.addEventListener('mousedown', (e) => { e.preventDefault(); jump(); });
 
-  // ==== Обновление ====
+  // --- Кнопка прыжка для мобильных ---
+  jumpBtn.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); }, { passive: false });
+  jumpBtn.addEventListener('mousedown', (e) => { e.preventDefault(); jump(); });
+
+  // Защита от скролла
+  window.addEventListener('touchmove', (e) => {
+    if (state === STATE.PLAYING || state === STATE.MENU || state === STATE.GAME_OVER) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // ==== ОБНОВЛЕНИЕ ====
   function update() {
     frame++;
 
     if (state !== STATE.PLAYING) {
-      // Двигаем облака в меню/проигрыше
       clouds.forEach(c => {
         c.x -= c.speed * 0.5;
         if (c.x + c.size < 0) { c.x = W + c.size; c.y = 30 + Math.random() * 80; }
       });
-      // Обновляем анимацию ног при смерти
       if (state === STATE.GAME_OVER) {
         dino.legTimer++;
         if (dino.legTimer > 6) { dino.legTimer = 0; dino.legFrame = (dino.legFrame + 1) % 2; }
@@ -403,11 +441,10 @@
       return;
     }
 
-    // Ускорение
     if (speed < MAX_SPEED) speed += 0.0012;
     score = Math.floor(frame / 6);
 
-    // Динозавр физика
+    // Физика динозавра
     if (!dino.onGround) {
       dino.vy += dino.gravity;
       dino.y += dino.vy;
@@ -419,7 +456,6 @@
       }
     }
 
-    // Приседание меняет высоту хитбокса
     const currentH = dino.ducking && dino.onGround ? dino.h * 0.6 : dino.h;
     const currentY = GROUND_Y - currentH;
 
@@ -437,56 +473,41 @@
       dino.blinkTimer = 0;
     }
 
-    // Спавн препятствий
+    // Спавн
     const spawnRate = Math.max(50, 100 - speed * 3);
     if (frame % Math.floor(spawnRate) === 0 && frame > 40) {
       spawnObstacle();
     }
 
-    // Обновление кактусов
+    // Кактусы
     for (let i = obstacles.length - 1; i >= 0; i--) {
       const o = obstacles[i];
       o.x -= speed;
-      if (o.x + o.w < 0) {
-        obstacles.splice(i, 1);
-        continue;
-      }
-      // Коллизия
+      if (o.x + o.w < 0) { obstacles.splice(i, 1); continue; }
       if (rectCollide(
         dino.x + 8, currentY + 4, dino.w - 16, currentH - 8,
         o.x + 3, o.y + 3, o.w - 6, o.h - 6
-      )) {
-        gameOver();
-        return;
-      }
+      )) { gameOver(); return; }
     }
 
-    // Обновление птиц
+    // Птицы
     for (let i = birds.length - 1; i >= 0; i--) {
       const b = birds[i];
       b.x -= speed + 1.2;
       b.frameTimer++;
       if (b.frameTimer > 8) { b.frameTimer = 0; b.frame = (b.frame + 1) % 2; }
-      if (b.x + b.w < 0) {
-        birds.splice(i, 1);
-        continue;
-      }
+      if (b.x + b.w < 0) { birds.splice(i, 1); continue; }
       if (rectCollide(
         dino.x + 8, currentY + 4, dino.w - 16, currentH - 8,
         b.x + 8, b.y + 8, b.w - 16, b.h - 16
-      )) {
-        gameOver();
-        return;
-      }
+      )) { gameOver(); return; }
     }
 
-    // Облака
     clouds.forEach(c => {
       c.x -= c.speed + speed * 0.05;
       if (c.x + c.size < 0) { c.x = W + c.size; c.y = 30 + Math.random() * 80; }
     });
 
-    // Земля
     groundDecor.forEach(g => {
       g.x -= speed;
       if (g.x + g.w < 0) {
@@ -495,17 +516,12 @@
       }
     });
 
-    // Частицы
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.1;
-      p.life--;
+      p.x += p.vx; p.y += p.vy; p.vy += 0.1; p.life--;
       if (p.life <= 0) particles.splice(i, 1);
     }
 
-    // Смена дня/ночи каждые 700 очков
     nightTimer++;
     if (score > 0 && score % 700 === 0 && nightTimer > 60) {
       nightMode = !nightMode;
@@ -513,29 +529,22 @@
       nightTimer = 0;
     }
 
-    // Очки
     scoreEl.textContent = String(score).padStart(5, '0');
-
-    // Обновление скорости
-    if (speed >= MAX_SPEED) speed = MAX_SPEED;
   }
 
   function rectCollide(x1, y1, w1, h1, x2, y2, w2, h2) {
     return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
   }
 
-  // ==== Рисование ====
+  // ==== РИСОВАНИЕ ====
   const FG = '#535353';
   const BG_NIGHT = '#b8b8d0';
-
   function getColor() { return nightMode ? BG_NIGHT : FG; }
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
-
     const c = getColor();
 
-    // Земля
     ctx.strokeStyle = c;
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -543,36 +552,22 @@
     ctx.lineTo(W, GROUND_Y + 2);
     ctx.stroke();
 
-    // Декор земли (точки/чёрточки)
     ctx.fillStyle = c;
-    groundDecor.forEach(g => {
-      ctx.fillRect(g.x, g.y, g.w, g.h);
-    });
+    groundDecor.forEach(g => ctx.fillRect(g.x, g.y, g.w, g.h));
 
-    // Облака
     ctx.strokeStyle = c;
-    ctx.lineWidth = 2;
     clouds.forEach(cl => {
       ctx.beginPath();
-      // Простое облако из дуг
       ctx.arc(cl.x, cl.y, cl.size * 0.5, Math.PI, 0);
       ctx.arc(cl.x + cl.size * 0.6, cl.y - cl.size * 0.15, cl.size * 0.4, Math.PI, 0);
       ctx.arc(cl.x - cl.size * 0.6, cl.y - cl.size * 0.1, cl.size * 0.35, Math.PI, 0);
       ctx.stroke();
     });
 
-    // Кактусы
     ctx.fillStyle = c;
-    obstacles.forEach(o => {
-      drawCactus(o.x, o.y, o.w, o.h, o.small);
-    });
+    obstacles.forEach(o => drawCactus(o.x, o.y, o.w, o.h, o.small));
+    birds.forEach(b => drawBird(b.x, b.y, b.w, b.h, b.frame));
 
-    // Птеродактили
-    birds.forEach(b => {
-      drawBird(b.x, b.y, b.w, b.h, b.frame);
-    });
-
-    // Частицы пыли
     ctx.fillStyle = nightMode ? '#7a7aa0' : '#aaa';
     particles.forEach(p => {
       ctx.globalAlpha = p.life / p.maxLife;
@@ -580,26 +575,17 @@
     });
     ctx.globalAlpha = 1;
 
-    // Динозавр
     drawDino();
-
-    // Обновление оверлея при game over
-    if (state === STATE.GAME_OVER) {
-      // пусто
-    }
   }
 
   function drawCactus(x, y, w, h, small) {
     const c = getColor();
     ctx.fillStyle = c;
-
     if (small) {
-      // Маленький кактус
       ctx.fillRect(x + w * 0.35, y, w * 0.3, h);
       ctx.fillRect(x, y + h * 0.3, w * 0.3, h * 0.25);
       ctx.fillRect(x + w * 0.7, y + h * 0.2, w * 0.3, h * 0.3);
     } else {
-      // Большой кактус
       ctx.fillRect(x + w * 0.35, y, w * 0.3, h);
       ctx.fillRect(x, y + h * 0.25, w * 0.35, h * 0.3);
       ctx.fillRect(x + w * 0.65, y + h * 0.35, w * 0.35, h * 0.25);
@@ -609,42 +595,28 @@
   function drawBird(x, y, w, h, frame) {
     const c = getColor();
     ctx.fillStyle = c;
-    ctx.strokeStyle = c;
-    ctx.lineWidth = 2;
-
-    // Тело
     ctx.beginPath();
     ctx.ellipse(x + w / 2, y + h / 2, w * 0.3, h * 0.25, 0, 0, Math.PI * 2);
     ctx.fill();
-
-    // Голова
     ctx.beginPath();
     ctx.arc(x + w * 0.75, y + h * 0.4, 5, 0, Math.PI * 2);
     ctx.fill();
-
-    // Клюв
     ctx.beginPath();
     ctx.moveTo(x + w * 0.8, y + h * 0.35);
     ctx.lineTo(x + w * 0.95, y + h * 0.42);
     ctx.lineTo(x + w * 0.8, y + h * 0.48);
     ctx.fill();
-
-    // Крылья (взмах)
     ctx.beginPath();
     if (frame === 0) {
-      // Крылья вверх
       ctx.moveTo(x + w * 0.4, y + h * 0.5);
       ctx.lineTo(x + w * 0.5, y - 5);
       ctx.lineTo(x + w * 0.65, y + h * 0.5);
     } else {
-      // Крылья вниз
       ctx.moveTo(x + w * 0.4, y + h * 0.5);
       ctx.lineTo(x + w * 0.5, y + h + 5);
       ctx.lineTo(x + w * 0.65, y + h * 0.5);
     }
     ctx.fill();
-
-    // Хвост
     ctx.beginPath();
     ctx.moveTo(x + w * 0.15, y + h * 0.4);
     ctx.lineTo(x - 5, y + h * 0.3);
@@ -655,7 +627,6 @@
   function drawDino() {
     const c = getColor();
     ctx.fillStyle = c;
-
     const ducking = dino.ducking && dino.onGround && !dino.dead;
     const w = ducking ? dino.w * 1.3 : dino.w;
     const h = ducking ? dino.h * 0.6 : dino.h;
@@ -663,10 +634,7 @@
     const y = GROUND_Y - h;
 
     if (dino.dead) {
-      // Мёртвый динозавр — глаза X
       ctx.fillRect(x + 8, y + 8, w - 16, h - 16);
-
-      // Глаз с крестиком
       ctx.strokeStyle = nightMode ? '#1a1a2e' : '#f7f7f7';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -675,44 +643,31 @@
       ctx.moveTo(x + w * 0.75, y + 12);
       ctx.lineTo(x + w * 0.6, y + 22);
       ctx.stroke();
-
-      // Ноги (стоят)
       ctx.fillStyle = c;
       ctx.fillRect(x + 6, GROUND_Y - 6, 8, 6);
       ctx.fillRect(x + 22, GROUND_Y - 6, 8, 6);
       return;
     }
 
-    // Хвост
     ctx.fillRect(x - 8, y + h * 0.3, 12, 6);
-
-    // Тело
     ctx.fillRect(x, y, w, h - 8);
-
-    // Голова
     ctx.fillRect(x + w - 5, y - 4, 18, 18);
 
-    // Глаз
     if (!dino.blinking) {
       ctx.fillStyle = nightMode ? '#1a1a2e' : '#f7f7f7';
       ctx.fillRect(x + w + 4, y + 2, 5, 5);
       ctx.fillStyle = c;
     }
 
-    // Рот
     ctx.fillRect(x + w + 8, y + 12, 8, 2);
 
-    // Ноги
     if (!dino.onGround || dino.dead) {
-      // В прыжке — обе вытянуты
       ctx.fillRect(x + 8, y + h - 8, 7, 8);
       ctx.fillRect(x + w - 16, y + h - 8, 7, 8);
     } else if (dino.ducking) {
-      // Приседая — ноги короткие
       ctx.fillRect(x + 8, GROUND_Y - 5, 7, 5);
       ctx.fillRect(x + w - 16, GROUND_Y - 5, 7, 5);
     } else {
-      // Бег
       if (dino.legFrame === 0) {
         ctx.fillRect(x + 8, y + h - 8, 7, 8);
         ctx.fillRect(x + w - 16, y + h - 4, 7, 4);
@@ -722,24 +677,17 @@
       }
     }
 
-    // Маленькая ручка
     ctx.fillRect(x + w - 10, y + h * 0.5, 8, 4);
   }
 
-  // ==== Главный цикл ====
   function loop() {
     update();
     draw();
     requestAnimationFrame(loop);
   }
 
-  // ==== Инициализация ====
   resetGame();
   loop();
-
-  // Начальное состояние — меню
-  overlay.classList.remove('hidden');
-
 })();
 </script>
 </body>
